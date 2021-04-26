@@ -1,0 +1,97 @@
+
+{% capture wpd_discounted_prices %}{%- render 'wcp_discount'  wcp_discount:product , wpd_is_render:'yes' -%}{% endcapture %}
+    
+    {%- capture wcp_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price' -%}{%- endcapture -%}
+    {% assign  wcp_price = wcp_price | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_compare_at_price != blank %}
+        {% assign  wcp_compare_at_price = wcp_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_compare_at_price = nil %}
+    {% endif %}
+    
+    {%- capture wcp_compare_at_price_min  -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price_min' -%}{%- endcapture -%}
+    {% assign  wcp_compare_at_price_min = wcp_compare_at_price_min | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price_max  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price_max' -%}{%- endcapture -%}
+    {% assign  wcp_compare_at_price_max = wcp_compare_at_price_max | minus: 0 %}
+    
+    {%- capture wcp_price_min -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price_min' -%}{%- endcapture -%}
+    {% assign  wcp_price_min = wcp_price_min | minus: 0 %}
+    
+    {%- capture wcp_price_max -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price_max' -%}{%- endcapture -%}
+    {% assign  wcp_price_max = wcp_price_max | minus: 0 %}
+    
+    
+    {%- capture v_discount_tag -%}{%-render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'v_discount_tag'-%}{%- endcapture -%}
+    {% assign v_discount_tag = v_discount_tag | strip %}
+    
+    {%- capture p_discount_tag -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'p_discount_tag' -%}{%- endcapture -%}
+    {% assign p_discount_tag = p_discount_tag | strip %}
+    
+    {% assign raw_set_prices = product.metafields.wcp_set_prices.wcp_set_prices %}
+    {% assign set_prices_array = blank %}
+    {% if raw_set_prices %}
+        {% assign set_prices_array = raw_set_prices | split: ',' %}
+    {% endif %}
+    
+    {%- capture wcp_discount_value -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_discount_value' -%}{%- endcapture -%}
+    
+    {% capture wcp_v_discounted_prices %}{%- render 'wcp_variant' , wcp_variant:product.selected_or_first_available_variant , set_prices_array:set_prices_array , wpd_is_render:'yes', v_discount_tag : v_discount_tag , wcp_discount_value : wcp_discount_value -%}{%- endcapture -%}
+    
+    {%- capture wcp_v_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wcp_v_discounted_prices, price_variable:'wcp_v_price' -%}{%- endcapture -%}
+    {% assign  wcp_v_price = wcp_v_price | minus: 0 %}
+    
+    {%- capture wcp_v_compare_at_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wcp_v_discounted_prices, price_variable:'wcp_v_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_v_compare_at_price != blank %}
+        {% assign  wcp_v_compare_at_price = wcp_v_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_v_compare_at_price = nil %}
+    {% endif %}
+<h2 class="offers">
+  <span id="price-{{ section.id }}" class="price-preview price price-field product-single__price" itemprop="price">{% if wcp_v_price > 0 %}{{ wcp_v_price | money }}{% else %}{{ 'products.product.free' | t }}{% endif %}{% if wcp_v_compare_at_price > wcp_v_price %} <del>{{ wcp_v_compare_at_price | money }}</del>{% endif %}</span>
+  <span id="savings-{{ section.id }}" class="savings{% unless wcp_v_compare_at_price > wcp_v_price %} hidden{% endunless %}" aria-hidden="true"><span>{{ 'products.product.savings' | t }}</span> <span id="compare-{{ section.id }}">{{ wcp_v_compare_at_price | minus: wcp_v_price | money_without_trailing_zeros }}</span></span>
+</h2>
+{% if cart.taxes_included or shop.shipping_policy.body != blank %}
+<p><small><strong>
+  {%- if cart.taxes_included -%}{{ 'products.product.include_taxes' | t }}{%- endif -%}
+  {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}<span class="separator" aria-hidden="true"></span>{%- endif -%}
+  {%- if shop.shipping_policy.body != blank -%}{{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}{%- endif -%}
+  </strong></small></p>
+{% endif %}
+{%- assign variant = product.selected_or_first_available_variant -%}
+<span id="offer-{{ section.id }}"{% unless variant.unit_price_measurement %} class="hidden"{% endunless %}>{%- render 'product-unit-price', variant: variant -%}</span>
+{% if section.settings.vendor_enable or section.settings.sku_enable or template == 'product.quick' and settings.vendor_enable_quick or settings.sku_enable_quick %}
+<p id="product-logistics-{{ section.id }}" class="product-logistics{% if section.settings.product_availability_enable == false or template == 'product.quick' and settings.product_availability_enable_quick == false %} bottompad-quarter{% endif %}">
+  {% if section.settings.sku_enable or template == 'product.quick' and settings.sku_enable_quick %}
+  <span id="sku-{{ section.id }}" class="variant-sku">{% if product.selected_or_first_available_variant.sku != blank %}{{ 'products.product.sku' | t }} {{ product.selected_or_first_available_variant.sku }}{% endif %}</span>
+  {% endif %}
+  {% if template == 'product.quick' and settings.vendor_enable_quick and settings.sku_enable_quick %}
+  {%- assign divider = true -%}
+  {% elsif section.settings.vendor_enable and section.settings.sku_enable %}
+  {%- assign divider = true -%}
+  {% else %}
+  {%- assign divider = false -%}
+  {% endif %}
+  {% if divider %}<span class="separator{% unless product.selected_or_first_available_variant.sku != blank %} hidden{% endunless %}" aria-hidden="true"></span>{% endif %}
+  {% if section.settings.vendor_enable or template == 'product.quick' and settings.vendor_enable_quick %}
+  <span class="vendor">
+    {%- assign product_vendor_handle = product.vendor | handle -%}
+    {% if collections[product_vendor_handle].handle == product_vendor_handle %}
+    {%- assign vendor_url = collections[product_vendor_handle].url -%}
+    {% else %}
+    {%- assign vendor_url = product.vendor | url_for_vendor -%}
+    {% endif %}
+    {{ product.vendor | link_to: vendor_url, product.vendor }} 
+  </span>
+  {% endif %}
+</p>
+{% endif %}
+
+{% if section.settings.reviews_enable or template == 'product.quick' and settings.reviews_enable_quick %}
+<!-- To add a new review app, install code between the comments -->
+<div class="reviews"><a href="#reviews" title="{{ 'products.general.reviews' | t }}"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></a></div>
+<!-- End comments -->
+{% endif %}
+

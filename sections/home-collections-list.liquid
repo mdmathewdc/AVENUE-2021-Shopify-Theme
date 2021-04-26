@@ -1,0 +1,390 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.blocks.size == 0 and section.settings.title == blank and section.settings.sub_title == blank %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+{% if section.settings.use_background_img and section.settings.background_img != blank %}
+{%- assign img_src = section.settings.background_img -%}
+{% if full_width == false %}{%- assign size = 1280 -%}{% endif %}
+{%- capture image_data -%}{%- render 'image-background-src', img_src: img_src, size: size -%}{%- endcapture -%}
+{% endif %}
+
+<section data-section-id="{{ section.id }}" 
+         data-section-type="home_collections_list" 
+         data-carousel-type="section"
+         class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %}{% unless section.blocks.size == 0 %}colored-bottom{% endunless %}{% else %}{% if section.blocks.size > 0 %}colored-top-bottom{% else %}{% unless section.blocks.size == 0 %}colored-bottom{% endunless %}{% endif %}{% endif %}{% endif %}{% if section.settings.include_color == 'color-none' %} {% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %}{% unless section.blocks.size == 0 %}margins-bottom-section{% endunless %}{% else %}{% if section.blocks.size > 0 %}margins-section{% else %}{% unless section.blocks.size == 0 %}margins-bottom-section{% endunless %}{% endif %}{% endif %}{% endif %} {% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {% if section_onboarding or section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %}
+  <div class="{% if full_width %}{% if section_onboarding or section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% if section.blocks.size > 0 and section.settings.use_background_img or section_onboarding %}bottompad {% endif %}{% endif %}{% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.use_background_img %}white{% endif %} clearfix"
+       {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %} 
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background-repeat: no-repeat;background-position: {{ section.settings.background_alignment }};"
+       {% endif %}>
+    {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %}
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '2560x' }}) {{ section.settings.background_alignment }} no-repeat;"></div>
+    </noscript>
+    {% endif %}
+    <div{% if full_width and section.settings.use_background_img %} class="background-overlay background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container clearfix">
+        <div{% unless full_width %}{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+          <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="tab-body background-colored {{ section.settings.include_color }}{% unless section.settings.use_background_img %}{% if full_width == false %} twelve{% endif %}{% endunless %}"{% endif %}>
+            <div class="{% if full_width == false %}{% if section.settings.use_background_img %}background-cover lazyload {% if section.blocks.size > 0 %}bottompad {% endif %}{% endif %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}{% endif %} clearfix"
+                 {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %} 
+                 data-bgset="{{ image_data | strip }}"
+                 data-sizes="auto"
+                 style="background-repeat: no-repeat;background-position: {{ section.settings.background_alignment }};"
+                 {% endif %}>
+              {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %}
+              <noscript>
+                <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) {{ section.settings.background_alignment }} no-repeat;"></div>
+              </noscript>
+              {% endif %}
+              <div class="table content-height-{{ section.id }}{% if full_width == false and section.settings.use_background_img %} twelve background-overlay background-overlay-{{ section.id }}{% endif %}">
+                <div class="table-cell">
+                  <div class="twelve {{ section.settings.text_alignment }}">
+                    {% if section_onboarding %}
+                    <h2>{{ 'homepage.onboarding.collection_no_title' | t }}</h2>
+                    <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+                    {% else %}
+                    {% if section.settings.title != blank%}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+                    {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+  {% endif %}
+  
+  {% if section.settings.use_slider and section.blocks.size > 2 %}
+  {%- assign slider = true -%}
+  {% else %}
+  {%- assign slider = false -%}
+  {% endif %}
+  
+  <div class="container {% if slider %}{% unless full_width == false and section.settings.include_color == 'color-none' %}{% if full_width and section.blocks.size < 5 %}under{% else %}no-pad{% endif %} {% endunless %}{% elsif full_width == false and section.settings.include_color != 'color-none' %}no-pad {% endif %}{% if full_width == false and section.settings.include_color != 'color-none' %}cancel {% endif %}{% if settings.animation_enable %}animate-section animate-section-margin load {% endif %}clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve background-colored {{ section.settings.include_color }}{% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %} colored-bottom{% else %} colored-top-bottom{% endif %}"{% endif %}>
+      <div{% if slider and full_width == false %} class="twelve"{% endif %}>
+        <div class="{% if slider %}glider-contain {% endif %}tab-body">
+          <div {% if slider %}id="glider-carousel-{{ section.id }}" data-slides="2.5" {% if section.blocks.size < 5 %}data-limit="4" {% endif %}{% endif %}class="{% if slider %}glider {% unless section_onboarding %}{% if section.blocks.size < 5 %}no-drag {% endif %}{% endunless %}{% endif %}table-center text-center clearfix">
+            <div class="product-loop{% if section.blocks.size < 5 %} center{% endif %}{% if slider %} glider-track{% endif %}">
+
+              {%- assign block_width = section.blocks.size | downcase -%}
+              {% case block_width %}
+              {% when '5','9','10','13','14','15' %}
+              {%- assign block_width = 'two-half' -%}
+              {% else %} 
+              {%- assign block_width = 'three' -%}
+              {% endcase %}
+              
+              {% for block in section.blocks %}
+              {%- assign collection = collections[block.settings.collection] -%}          
+              {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              
+              <div class="product animate {{ block_width}} brands animate-loop-{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                <div class="product-thumb">
+                  {% if collection == empty %}
+                  <a href="{{ routes.all_products_collection_url }}">
+                    {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                  </a>
+                  {% else %}
+                  {% if block.settings.block_img != blank %}
+                  {%- assign img_src = block.settings.block_img -%}
+                  {% elsif section.settings.use_product_image or collection.image == blank %}
+                  {%- assign img_src = collection.products.first.featured_media -%}
+                  {% else %}
+                  {%- assign img_src = collection.image -%}
+                  {% endif %}
+                  {%- assign size = 320 -%}
+                  <a href="{{ collection.url  }}" title="{{ collection.title | escape }}">
+                    {% if section.settings.image_fit =='cover' %}
+                    <span class="lazypadding">
+                      {%- capture image_data -%}{%- render 'image-background-src', img_src: img_src, size: size -%}{%- endcapture -%}
+                      {%- render 'image-background', bg_size: 'cover', image_data: image_data, img_src: img_src, size: size -%}
+                    </span>                            
+                    {% else %}
+                    <span class="center" style="max-width:{{ img_src.width }}px">
+                      {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.title }}{% endif %}{%- endcapture -%}
+                      {%- render 'image-load', img_src: img_src, size: size, id: block.id, alt: alt -%}  
+                    </span>
+                    {% endif %}
+                  </a>
+                  {% endif %}
+                </div>
+                <div class="product-details">
+                  <div class="product-title collection">
+                    <h5>
+                      {% if collection == empty %}       
+                      <a href="{{ routes.all_products_collection_url }}">
+                        {{ 'homepage.onboarding.collection_title' | t }}
+                      </a>
+                      {% else %}
+                      <a href="{{ collection.url}}" title="{{ collection.title | escape }}">
+                        {{ collection.title }}
+                      </a>
+                      {% endif %}
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% if slider %}
+          <div id="glider-pagination-{{ section.id }}" class="glider-pagination {% if section.blocks.size < 5 %}hidden {% endif %}tab-body relative">
+            <div id="glider-button-prev-{{ section.id }}" class="glider-button-prev" role="button" aria-label="{{ 'products.general.previous' | t }}">{%- render 'icons-theme', icon: 'left', size: '16' -%}</div>
+            <div id="glider-button-next-{{ section.id }}" class="glider-button-next" role="button" aria-label="{{ 'products.general.next' | t }}">{%- render 'icons-theme', icon: 'right', size: '16' -%}</div>
+          </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+</section>
+
+<style> 
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:{{ section.settings.padding }}vh}
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Collection list",
+	"max_blocks": 15,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Collection list"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Group collections that have a common interest"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "use_background_img",
+        "label": "Show image",
+        "default": false
+      }, 
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      },
+      {
+        "type": "select",
+        "id": "background_alignment",
+        "label": "Image position",
+        "default": "center center",
+        "options": [
+          {
+            "label": "Top left",
+            "value": "left top"
+          },
+          {
+            "label": "Top center",
+            "value": "center top"
+          },
+          {
+            "label": "Top right",
+            "value": "right top"
+          },
+          {
+            "label": "Middle left",
+            "value": "left center"
+          },
+          {
+            "label": "Middle center",
+            "value": "center center"
+          },
+          {
+            "label": "Middle right",
+            "value": "right center"
+          },
+          {
+            "label": "Bottom left",
+            "value": "left bottom"
+          },
+          {
+            "label": "Bottom center",
+            "value": "center bottom"
+          },
+          {
+            "label": "Bottom right",
+            "value": "right bottom"
+          }
+        ]
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": true
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 25
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_product_image",
+        "label": "Show first product image",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "image_fit",
+        "label": "Image fit",
+        "default": "contain",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Fill space"
+          },
+          {
+            "value": "contain",
+            "label": "Fit to space"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "use_slider",
+        "label": "Use slider for collections",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "image_picker",
+            "id": "block_img",
+            "label": "Custom image"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection list",
+        "category": "Collection",
+        "blocks": [
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

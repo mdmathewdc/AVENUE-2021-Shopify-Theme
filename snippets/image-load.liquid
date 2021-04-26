@@ -1,0 +1,55 @@
+{%- assign sizex2 = size | times: 2 -%}
+{%- assign id = id -%}
+{%- assign img_url = img_src | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+{%- capture height -%}{% if datawidth == false %}{% if img_src.width < sizex2 %}{{ img_src.height }}{% else %}{{ sizex2 | divided_by: img_src.aspect_ratio }}{% endif %}{% else %}{% if img_src.width < size %}{{ img_src.height }}{% else %}{{ size | divided_by: img_src.aspect_ratio }}{% endif %}{% endif %}{%- endcapture -%}
+{%- assign height = height | round -%}
+{%- capture width -%}{% if datawidth == false %}{% if img_src.width < sizex2 %}{{ img_src.width }}{% else %}{{ sizex2 }}{% endif %}{% else %}{% if img_src.width < size %}{{ img_src.width }}{% else %}{{ size }}{% endif %}{% endif %}{%- endcapture -%}
+
+{%- capture img_width -%}
+  {%- if img_src.width >= size -%}
+    {%- if size < 220 -%},{{ size }}{%- endif -%}
+    {%- if size >= 220 -%},220{%- endif -%}
+    {%- if size >= 320 -%},320{%- endif -%}
+    {%- if size >= 480 -%},480{%- endif -%}
+    {%- if size >= 600 -%},600{%- endif -%}
+    {%- if size >= 768 -%},780{%- endif -%}
+    {%- if size >= 960 -%},960{%- endif -%}
+    {%- if size >= 1024 -%},1024{%- endif -%}
+    {%- if size >= 1280 -%},1280{%- endif -%}
+    {%- if size >= 1600 -%},1600{%- endif -%}
+    {%- if size >= 1900 -%},1900{%- endif -%} 
+    {%- if size >= 2560 -%},2560{%- endif -%}
+  {%- else -%}
+    {%- if img_src.width < 220 -%},{{ img_src.width }}{%- endif -%}
+    {%- if img_src.width >= 220 -%},220{%- endif -%}
+    {%- if img_src.width >= 320 -%},320{%- endif -%}
+    {%- if img_src.width >= 480 -%},480{%- endif -%}
+    {%- if img_src.width >= 600 -%},600{%- endif -%}
+    {%- if img_src.width >= 768 -%},780{%- endif -%}
+    {%- if img_src.width >= 960 -%},960{%- endif -%}
+    {%- if img_src.width >= 1024 -%},1024{%- endif -%}
+    {%- if img_src.width >= 1280 -%},1280{%- endif -%}
+    {%- if img_src.width >= 1600 -%},1600{%- endif -%}
+    {%- if img_src.width >= 1900 -%},1900{%- endif -%}
+    {%- if img_src.width >= 2560 -%},2560{%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+<div class="relative">
+  <img id="image-{{ id }}"
+       class="{% unless nopad %}nopad {% endunless %}lazywidth lazyload no-js-hide img-align {% unless forloop_first %}list {% endunless %}{% if img_src.aspect_ratio > 1 %}landscape{% elsif img_src.aspect_ratio < 1 %}vertical{% else %}square{% endif %}"
+       height="{{ height }}"
+       width="{{ width }}"
+       data-source="{{ img_src | img_url: 'master' }}"
+       data-src="{{ img_url }}"
+       data-id="{{ id | remove: 'thumb-' }}"
+       data-widths="[{% if datawidth == false %}{{ size | times: 2 | remove_first: ',' }}{% else %}{{ img_width | remove_first: ',' }}{% endif %}]"
+       data-aspectratio="{{ img_src.aspect_ratio }}"
+       data-sizes="auto"
+       {% if section.settings.zoom_enable or template == 'product.quick' and settings.zoom_enable %}data-zoom="{{ img_src | img_url: '1024x1024', scale: 2 }}"{% endif %}
+       data-image
+       alt="{{ alt | escape }}"
+       style="max-height:{{ height }}px;max-width:{{ width }}px">
+</div>
+
+<noscript>{%- assign noscript = size | append: 'x' -%}<img class="lazywidth {% if img_src.aspect_ratio > 1 %}landscape{% elsif img_src.aspect_ratio < 1 %}vertical{% else %}square{% endif %} no-js hidden" src="{{ img_src | img_url: noscript }}" height="{{ height }}" width="{{ width }}" alt="{{ alt }}" style="max-width:{{ width }}px"></noscript>

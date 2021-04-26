@@ -1,0 +1,18 @@
+<div class="twelve breadcrumbs breadcrumb_text bottompad" aria-label="{{ 'general.breadcrumbs.breadcrumbs' | t }}" role="navigation">
+  <span><a href="{{ routes.root_url }}" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></span> 
+  <span class="separator" aria-hidden="true"></span>
+  <span><a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title }}</a></span>       
+  {% if current_tags %}
+  {% for tag in current_tags %}
+  <span class="separator" aria-hidden="true"></span>
+  <span><a href="/blogs/{{ blog.handle }}/tagged/{{ tag | handleize }}" title="{{ blog.title | escape }}: {{ tag | escape }}">{{ tag }}</a></span>
+  {% endfor %}
+  {% endif %}
+  {% if paginate.pages != 0 and blog.articles.size > 0 %}      
+  <span class="separator" aria-hidden="true"></span><span class="active">{{ 'general.breadcrumbs.page' | t: current_page: current_page, pages: pages }}</span>
+  {% endif %}
+</div>
+
+<div class="twelve">
+  <h1>{% if current_tags %}{{ blog.title | link_to: blog.url, blog.title }} &raquo; {{ current_tags.first }}{% else %}{{ blog.title }}{% endif %}{% if section.settings.include_rss %} <a href="{{ blog.url}}.atom" title="{{ blog.title | escape }} {{ 'blogs.sidebar.rss_feed' | t }}" target="_blank" role="button" aria-label="{{ blog.title }} {{ 'blogs.sidebar.rss_feed' | t }}">{%- render 'icons-theme', icon: 'rss', size: '26' -%}</a>{% endif %}</h1>
+</div>

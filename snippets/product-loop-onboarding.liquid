@@ -1,0 +1,25 @@
+<div class="product animate {% if settings.borders_enable %}borders {% endif %} {{ block_width }} brands animate-loop-{{ forloop_index0 }}">
+  <div class="product-border{% if settings.borders_enable and section.settings.include_color != 'color-none' %} product-border-background{% endif %} {% if section.settings.sub_text_alignment %}{{ section.settings.sub_text_alignment }}{% else %}{{ settings.text_alignment }}{% endif %}">
+    <div class="product-thumb">
+      {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+    </div>
+    <div class="product-details">
+      <div class="product-title">        
+        <h5>
+          {{ 'homepage.onboarding.product_title' | t }}
+        </h5>
+      </div>    
+      <div class="product-price">
+        <h6>{{ 1999 | money }} | <del>{{ 2499 | money }}</del></h6>
+      </div>
+      {% if settings.vendor_enable %}
+      <p class="product-logistics{% unless settings.quick_collection_hover == false %} no-pad{% endunless %}">
+        <span class="vendors">
+          {{ 'homepage.onboarding.product_vendor' | t }}
+        </span>
+      </p>
+      {% endif %}
+      {% if settings.quick_view_enable %}<div><span class="btn auto-width">{{ 'products.general.quick' | t }}</span></div>{% endif %}
+    </div>
+  </div>
+</div>

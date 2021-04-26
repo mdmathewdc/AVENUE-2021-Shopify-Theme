@@ -1,0 +1,94 @@
+{%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+<div id="main-product-image-{{ section.id }}" 
+     class="featured-image featured-image-div-{{ section.id }} main-image-{{ section.id }} text-center"
+     data-product-single-media-group >
+  {% for media in product.media %}
+  {%- capture image_alt -%}{{ product.title | escape }} Background{%- endcapture -%}
+  {%- assign linkCt1 = 0 -%}
+  {%- assign linkCt = 0 -%}
+
+  {% if media.alt == image_alt %}
+  {%- capture linkCt1 -%}{{ linkCt | plus:1 }}{%- endcapture -%}  
+  {% endif %} 
+  {%- assign total_size = product.media.size | minus: linkCt1 -%}  
+
+  {% unless media.alt == image_alt %}  
+  <div id="variant-image-{{ media.id }}" 
+       class="variant-image variant-image-{{ section.id }} relative{% if media == featured_media %} visible{% else %} hidden{% endif %}"
+       aria-hidden="{% if media == featured_media %}false{% else %}true{% endif %}" 
+       data-image-id="{{ media.id }}"
+       {% if media.media_type == 'video' or media.media_type == 'external_video' %} data-product-media-type-video data-enable-video-looping="{{ section.settings.loop_enable }}"{% endif %}
+       {% if media.media_type == 'model' %} data-product-media-type-model{% endif %}
+       {% if media.media_type == 'external_video' %} data-video-id="{{ media.external_id }}"{% endif %}
+       data-product-single-media-wrapper
+       data-media-id="{{ section.id }}-{{ media.id }}"
+       tabindex="-1"
+       style="max-width:{{ media.width }}px">   
+    {% case media.media_type %}
+    {% when 'image' %}
+    <div class="{% if section.settings.zoom_enable or template == 'product.quick' and settings.zoom_enable %}{% unless media.width < 560 %}drift {% endunless %}{% endif %}clearfix">
+      {%- render 'image-load', id: media.id, img_src: media, size: 600, alt: media.alt, forloop_first: forloop.first -%}
+    </div>
+    {% when 'external_video' %}
+    {{ media | external_video_tag }} 
+    {% when 'model' %}
+    <div class="relative media-viewer text-left">
+      {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true, data-model-id: media.id, image_size: '600x600' }}
+    </div>
+    <button class="btn auto-full-width modelthreed hidden"
+            aria-label="{{ 'products.general.media_view' | t }}"
+            data-shopify-xr
+            data-shopify-model3d-id="{{ media.id }}"
+            data-shopify-title="{{ product.title | escape }}"
+            data-shopify-xr-hidden
+            >{%- render 'icons-theme', icon: 'threed', size: '14', icon_class: 'view' -%}&nbsp;&nbsp;{{ 'products.general.media_view' | t }}</button>
+    {% when 'video' %}
+    <div class="relative">
+    {{ media | video_tag: controls: true, image_size: '600x600' }}
+    </div>
+    {% else %}
+    {{ media | media_tag: image_size: '600x600' }}
+    {% endcase %}
+  </div>
+  {% endunless %}
+  {% endfor %}
+</div>
+
+{% if total_size > 1 %}
+<div class="glider-contain">
+  <div{% if total_size > 4 %} id="thumbnails-{{ section.id }}"{% endif %} class="{% if total_size > 4 %}glider {% else %}twelve table-center negative-left negative-right {% endif %}thumbnails thumbs">
+    <div class="{% if total_size > 4 %}glider-track{% else %}center{% endif %}">
+      {% for media in product.media %}
+      {%- capture image_alt -%}{{ product.title | escape }} Background{%- endcapture -%}
+      {% unless media.alt == image_alt %}
+      <div class="three {% if total_size < 5 %}mobile {% endif %}thumb-image-{{ section.id }} image" data-image-id="{{ media.id }}"{% if total_size > 4 %} data-gslide="{{ forloop.index0 }}"{% endif %}>  
+        <div class="title-align">
+          <div class="relative">
+            <a href="javascript:;" title="{{ alt | escape }}" class="img-align" tabindex="0" aria-current="{% if media == featured_media %}true{% else %}false{% endif %}">
+              {%- capture id -%}thumb-{{ media.id }}{%- endcapture -%}
+              {% assign nopad = true %}
+              {%- render 'image-load', id: id, img_src: media.preview_image, size: 125, alt: media.alt, nopad: nopad -%}
+              {% case media.media_type %}
+              {% when 'external_video' %}
+              {%- render 'icons-theme', icon: 'play', size: '16', icon_class: 'thumbnail' -%}
+              {% when 'model' %}
+              {%- render 'icons-theme', icon: 'threed', size: '16', icon_class: 'thumbnail' -%}
+              {% when 'video' %}
+              {%- render 'icons-theme', icon: 'play', size: '16', icon_class: 'thumbnail' -%}
+              {% endcase %}
+            </a>  
+          </div>
+        </div>
+      </div>
+      {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+  {% if total_size > 4 %}
+  <div id="glider-pagination-thumbs" class="glider-pagination relative">
+    <div id="glider-button-prev-thumbs-{{ section.id }}" class="tabindex glider-button-prev thumbs" role="button" aria-label="{{ 'products.general.previous' | t }}">{%- render 'icons-theme', icon: 'left', size: '16' -%}</div>
+    <div id="glider-button-next-thumbs-{{ section.id }}" class="tabindex glider-button-next thumbs" role="button" aria-label="{{ 'products.general.next' | t }}">{%- render 'icons-theme', icon: 'right', size: '16' -%}</div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}

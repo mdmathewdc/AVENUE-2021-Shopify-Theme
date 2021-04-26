@@ -1,0 +1,290 @@
+<section data-section-id="{{ section.id }}" 
+         data-section-type="blog_page" 
+         class="container bottompad-section clearfix">
+
+  <div class="twelve breadcrumbs breadcrumb_text bottompad" aria-label="{{ 'general.breadcrumbs.breadcrumbs' | t }}" role="navigation">
+    <span><a href="{{ routes.root_url }}" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></span> 
+    <span class="separator" aria-hidden="true"></span>
+    <span><a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title }}</a></span>       
+    <span class="separator" aria-hidden="true"></span>
+    <span class="active">{{ article.title }}</span>     
+  </div>
+
+  <div class="twelve">
+    <div class="tab-body blog-header">
+      {% if article.image and section.settings.include_image %}
+      {%- capture alt -%}{% if article.image.alt %}{{ article.image.alt }}{% else %}{{ article.title }}{% endif %}{%- endcapture -%}
+      <div class="bottompad-half center" style="max-width:{{ article.image.width }}px">{%- render 'image-load', id: article.image.id, img_src: article.image, size: 1280, alt: alt -%}</div>
+      {% endif %}
+      <h1 class="blog-title">{{ article.title }}</h1>
+      {% if section.settings.include_author or section.settings.include_date or blog.comments_enabled? and article.comments.size > 0 %}
+      <h6 class="blog-data bottompad-half">{% if section.settings.include_author %}{{ article.author }}{% endif %}{% if section.settings.include_author and section.settings.include_date %}<span class="separator" aria-hidden="true"></span>{% endif %}{% if section.settings.include_date %}{{ article.published_at | date: settings.month_day_year }}{% endif %}{% if blog.comments_enabled? and article.comments.size > 0 %}{% if section.settings.include_author or section.settings.include_date %}<span class="separator" aria-hidden="true"></span>{% endif %}<a href="#comments" title="{{ 'blogs.comments.comments' | t }}">{{ article.comments_count }} {{ article.comments_count | pluralize: 'comment','comments' }}</a>{% endif %}</h6>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="{% if section.settings.include_newsletter or blog.articles_count > 1 %}seven{% else %}twelve{% endif %} left">
+    <div class="blog-article single-article">
+      <div class="blog-content">
+        {{ article.content }}
+      </div>
+
+      {% if article.tags.size > 0 and section.settings.include_tags %}
+      <div class="bottompad">
+        <h6 class="blog-data blog-tags">
+          {{ 'blogs.article.tags' | t }}
+          {% for tag in article.tags %} 
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" title="{{ blog.title | escape }}: {{ tag | escape }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+          {% endfor %}
+        </h6>  
+      </div>
+      {% endif %}
+
+      {% if section.settings.include_social %}
+      <div class="center center-table">
+        {%- render 'social-share', share_title: article.title, share_permalink: article.url, share_image: article.image -%}
+      </div>
+      {% endif %}
+
+    </div>
+
+    {% if blog.comments_enabled? %}
+    <div id="comments" class="clearfix bottompad">
+      {% if article.comments.size > 0 %}
+      <div class="comments cart-table">
+        <h4>{{ 'blogs.comments.comments' | t }} ({{ article.comments_count }})</h4>
+        {% paginate article.comments by 10 %}
+        {% for comment in article.comments %}
+        <div class="comment item{% if forloop.last %} last{% endif %}">
+          <div class="comment-data bottompad-quarter"><small><strong>{{ comment.author }}</strong> on {{ comment.created_at | date: settings.month_day_year }}</small></div>
+          <div class="comment-content">
+            {{ comment.content }}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="pagination">
+          {% if paginate.pages > 1 %}
+          <div>{%- render 'pagination', paginate: paginate -%}</div>
+          {% endif %}
+        </div>
+        {% endpaginate %}
+      </div>
+      {% endif %}
+
+      <div class="comments comments-form">
+        {% form 'new_comment', article, class: 'form-validation' %}
+
+        {% if form.errors %}
+        <div class="errors feedback">
+          <p>{{ settings.comments_error_message }}</p>
+          {% for field in form.errors %}
+          {% if field == 'form' %}
+          <p>{{ form.errors.messages[field] }}</p>
+          {% else %}
+          <p>{{ form.errors.translated_fields[field] }} - {{ form.errors.messages[field] }}</p>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if form.posted_successfully? %}
+        <div class="success feedback">
+          <p>
+            {% if blog.moderated? %}
+            {{ 'blogs.comments.success_moderated' | t }}
+            {% else %}
+            {{ 'blogs.comments.success' | t }}
+            {% endif %}
+          </p>
+        </div>
+        {% endif %}
+
+        <h4>{{ 'blogs.comments.title' | t }}</h4>
+
+        <div class="comment-entries">
+          <span class="form">
+            <label for="comment-author">{{ 'blogs.comments.name' | t }}</label>
+            <input required id="commentFormName" {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="comment[author]" placeholder="{{ 'blogs.comments.name_placeholder' | t }}" value="{{ form.author }}" required />
+          </span>
+
+          <span class="form">
+            <label for="comment-email">{{ 'blogs.comments.email' | t }}</label>
+            <input required id="commentFormEmail" {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="comment[email]" placeholder="{{ 'blogs.comments.email_placeholder' | t }}" value="{{ form.email }}" required />
+          </span>
+
+          <span class="form">
+            <label for="comment-body">{{ 'blogs.comments.message' | t }}</label>
+            <textarea required id="commentFormMessage" {% if form.errors contains "body" %} class="error"{% endif %} name="comment[body]" placeholder="{{ 'blogs.comments.message_placeholder' | t }}" required>{{ form.body }}</textarea>
+          </span>
+
+        </div>
+
+        {% if blog.moderated? %}
+        <p>{{ 'blogs.comments.moderated' | t }}</p>
+        {% endif %}
+
+        <input type="submit" value="{{ 'blogs.comments.post' | t }}" class="btn outline auto-width"/> 
+
+        {% endform %}
+      </div>
+    </div>
+    {% endif %}
+
+    {%- assign current_found = false -%}
+    {%- assign done = false -%}
+    {% for a in blog.articles %}
+    {% if current_found and done == false %}
+    {%- assign next_article = a -%}
+    {%- assign done = true -%}
+    {% endif %}
+    {% unless done %}
+    {% if a.id == article.id %}
+    {%- assign current_found = true -%}
+    {% else %}
+    {%- assign prev_article = a -%}
+    {% endif %}
+    {% endunless %}
+    {% endfor %}
+
+    {% if prev_article or next_article %}
+    <div class="pagination clearfix">
+      {% if prev_article %}
+      <div class="{% if next_article %}six{% else %}twelve{% endif %} mobile left negative-left"><span class="prev">{%- render 'icons-theme', icon: 'left', size: '12' -%}</span><a href="{{ prev_article.url }}" title="{{ 'blogs.article.older_post' | t }} {{ prev_article.title | escape }}">{{ 'blogs.article.older_post' | t }} {{ prev_article.title | escape }}</a></div>
+      {% endif %}
+      {% if next_article %}
+      <div class="{% if prev_article %}six{% else %}twelve{% endif %} mobile right negative-right"><a href="{{ next_article.url }}" title="{{ 'blogs.article.newer_post' | t }} {{ next_article.title | escape }}">{{ 'blogs.article.newer_post' | t }} {{ next_article.title | escape }}</a><span class="next">{%- render 'icons-theme', icon: 'right', size: '12' -%}</span></div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>  
+
+  {% if section.settings.include_newsletter or section.settings.include_articles or blog.all_tags.size > 0 and section.settings.include_tags %}
+  <div class="four right">
+    {%- render 'blog-sidebar' -%}
+  </div>
+  {% endif %}
+
+</section>
+
+<script type="application/ld+json">
+{
+ "@context": "http://schema.org",
+ "@graph": [
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@id": {{ shop.url | json }},
+        "name": {{ shop.name | json }}
+      }
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@id": {{ shop.url | append: blog.url | json }},
+        "name": {{ blog.title | json }}
+      }
+    },{
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@id": {{ shop.url | append: article.url | json }},
+        "name": {{ article.title | json }}{% if article.image %},        
+        "image": {%- assign image_size = article.image.width | append: 'x' -%}{{ article.image | img_url: image_size | prepend: 'https:' | json }}{% endif %}
+      }
+    }]
+  },
+  {
+    "@type": "Article",
+    "articleBody": {{ article.content | strip_html | json }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ shop.url | append: article.url | json }}
+    },
+    "headline": {{ article.title | json }},
+    {% if article.excerpt != blank %}"description": {{ article.excerpt | strip_html | json }},{% endif %}
+    {% if article.image %}"image": [{%- assign image_size = article.image.width | append: 'x' -%}{{ article | img_url: image_size | prepend: 'https:' | json }}],{% endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  	"dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+      {% if page_image %}
+        {% assign image_size = page_image.width | append: 'x' %}
+        "logo": {
+          "@type": "ImageObject",
+          "height": {{ page_image.height | json }},
+          "url": {{ page_image | img_url: image_size | prepend: "https:" | json }},
+          "width": {{ page_image.width | json }}
+        },
+      {% endif %}
+      "name": {{ shop.name | json }}
+    }
+  }
+  ]
+}
+</script>
+
+{% schema %}
+  {
+    "name": "Blog posts",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "include_image",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_newsletter",
+        "label": "Show newsletter",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_articles",
+        "label": "Show recent posts",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "number_of_articles",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "label": "Recent posts",
+        "default": 3
+      }, 
+      {
+        "type": "checkbox",
+        "id": "include_tags",
+        "label": "Show tags",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "include_social",
+        "label": "Show social sharing buttons",
+        "default": true
+      }   
+    ]
+  } 
+{% endschema %}

@@ -1,0 +1,223 @@
+
+{% capture wpd_discounted_prices %}{%- render 'wcp_discount'  wcp_discount:product , wpd_is_render:'yes' -%}{% endcapture %}
+    
+    {%- capture wcp_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price' -%}{%- endcapture -%}
+    {% assign  wcp_price = wcp_price | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_compare_at_price != blank %}
+        {% assign  wcp_compare_at_price = wcp_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_compare_at_price = nil %}
+    {% endif %}
+    
+    {%- capture wcp_compare_at_price_min  -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price_min' -%}{%- endcapture -%}
+    {% assign  wcp_compare_at_price_min = wcp_compare_at_price_min | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price_max  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price_max' -%}{%- endcapture -%}
+    {% assign  wcp_compare_at_price_max = wcp_compare_at_price_max | minus: 0 %}
+    
+    {%- capture wcp_price_min -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price_min' -%}{%- endcapture -%}
+    {% assign  wcp_price_min = wcp_price_min | minus: 0 %}
+    
+    {%- capture wcp_price_max -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price_max' -%}{%- endcapture -%}
+    {% assign  wcp_price_max = wcp_price_max | minus: 0 %}
+    
+    
+    {%- capture v_discount_tag -%}{%-render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'v_discount_tag'-%}{%- endcapture -%}
+    {% assign v_discount_tag = v_discount_tag | strip %}
+    
+    {%- capture p_discount_tag -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'p_discount_tag' -%}{%- endcapture -%}
+    {% assign p_discount_tag = p_discount_tag | strip %}
+    
+    {% assign raw_set_prices = product.metafields.wcp_set_prices.wcp_set_prices %}
+    {% assign set_prices_array = blank %}
+    {% if raw_set_prices %}
+        {% assign set_prices_array = raw_set_prices | split: ',' %}
+    {% endif %}
+    
+    {%- capture wcp_discount_value -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_discount_value' -%}{%- endcapture -%}
+    
+    {% capture wcp_v_discounted_prices %}{%- render 'wcp_variant' , wcp_variant:product.selected_or_first_available_variant , set_prices_array:set_prices_array , wpd_is_render:'yes', v_discount_tag : v_discount_tag , wcp_discount_value : wcp_discount_value -%}{%- endcapture -%}
+    
+    {%- capture wcp_v_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wcp_v_discounted_prices, price_variable:'wcp_v_price' -%}{%- endcapture -%}
+    {% assign  wcp_v_price = wcp_v_price | minus: 0 %}
+    
+    {%- capture wcp_v_compare_at_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wcp_v_discounted_prices, price_variable:'wcp_v_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_v_compare_at_price != blank %}
+        {% assign  wcp_v_compare_at_price = wcp_v_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_v_compare_at_price = nil %}
+    {% endif %}
+{%- assign hide_default_title = false -%}
+{% if product.variants.size == 1 %} 
+{%- assign hide_default_title = true -%}
+{% endif %}
+
+{%- capture form_id -%}add-item-form-{{ section.id }}{%- endcapture -%}
+{%- capture form_class -%}{% if section.settings.go_to_cart_enable or template == 'product.quick' and settings.go_to_cart_enable_quick %}go-to-cart-{{ section.id }} {% endif %} variants clearfix{%- endcapture -%}
+
+<div class="product-variants table-center clearfix">
+{% form 'product', product, id:form_id, class:form_class, data-product-form: '' %}
+  
+  {%- assign variant = product.selected_or_first_available_variant -%}
+    
+  {% if section.settings.product_availability_enable or template == 'product.quick' and settings.product_availability_enable_quick %}
+  {% if template == 'product.quick' %}{%- assign avail_total = settings.product_availability_total_quick -%}{% else %}{%- assign avail_total = section.settings.product_availability_total -%}{% endif %}
+  <div class="twelve clearfix">
+    <span id="inventory-{{ section.id }}" class="variant-inventory bottompad" data-inv="{% if template == 'product.quick' %}{{ settings.product_availability_total_quick }}{% else %}{{ section.settings.product_availability_total }}{% endif %}" role="status">
+      <h4>{% if variant.available %}{% if variant.inventory_management and variant.inventory_policy != 'continue' and variant.inventory_quantity > 0 and variant.inventory_quantity < avail_total %}{{ 'products.general.inv_msg_1' | t }} {{ variant.inventory_quantity }} {{ 'products.general.inv_msg_2' | t }}{% else %}{{ 'products.product.available' | t }}{% endif %}{% else %}{{ 'products.product.sold_out' | t }}{% endif %}{% if variant.available == false or variant.available and variant.inventory_policy != 'continue' and variant.inventory_quantity > 0 and variant.inventory_quantity < avail_total %}{% if variant.incoming %}<br/><span class="error-text"><small><span class="icon icon-bell"></span>{% if variant.incoming %}{% if variant.next_incoming_date != blank %}{% if variant.available %}{{ 'products.product.stock_more' | t }}{% else %}{{ 'products.product.stock_in' | t }}{% endif %} {{ variant.next_incoming_date | date: '%b %e' }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}{% endif %}</small></span>{% endif %}{% endif %}</h4>
+    </span>
+  </div>
+  {% endif %}  
+  
+  {%- assign count = '0' -%}
+  {% unless product.has_only_default_variant %}
+  {% for option in product.options_with_values %}
+  {% if section.settings.var_length_enable or template == 'product.quick' and settings.var_length_enable_quick %}    
+  {%- capture count -%}{% increment count %}{%- endcapture -%}
+  {% else %}
+  {% if option.values.size > 1 %}{%- capture count -%}{% increment count %}{%- endcapture -%}{% endif %}
+  {% endif %}
+  {% endfor %}
+  {%- assign count = count | plus:1 -%}
+  {% endunless %}
+
+  {% if section.settings.layout %}
+  {%- capture block_width -%}{{ count }}{%- endcapture -%}
+  {% case block_width %}
+  {% when '0','1' %}
+  {%- assign block_width = 'four' -%}  
+  {% when '2' %}
+  {%- assign block_width = 'three' -%}
+  {% when '3' %}
+  {%- assign block_width = 'two-half' -%}  
+  {% endcase %}
+  {% else %}
+  {%- assign block_width = 'eight center' -%}
+  {% endif %}
+
+  <div class="purchase-section{% if product.variants.size > 1 %} multiple{% endif %}{% if section.settings.layout %} banner{% endif %}">
+    
+    {%- if settings.swatch_color != blank -%}
+    {%- assign var_color = settings.swatch_color | handleize -%}
+    {%- assign swatch_color = settings.swatch_color -%}
+    {%- else -%}
+    {%- assign var_color = 'products.general.color' | t | handleize -%}
+    {%- assign swatch_color = 'products.general.color' | t -%}
+    {%- endif -%}
+    
+    {%- if settings.swatch_size != blank -%}
+    {%- assign var_size = settings.swatch_size | handleize -%}
+    {%- assign swatch_size = settings.swatch_size -%}
+    {%- else -%}
+    {%- assign var_size = 'products.general.size' | t | handleize -%}
+    {%- assign swatch_size = 'products.general.size' | t -%}
+    {%- endif -%}
+    
+    {%- assign block = false -%}
+    {%- assign color_block = false -%}
+    {%- assign size_block = false -%}
+    {%- assign color_size_block = false -%}
+    
+    {% if section.settings.variant_enable == 'block' or template == 'product.quick' and settings.variant_enable_quick == 'block' %}
+    {%- assign block = true -%}
+    {% elsif section.settings.variant_enable == 'color-block' or template == 'product.quick' and settings.variant_enable_quick == 'color-block' %}
+    {%- assign color_block = true -%}
+    {% elsif section.settings.variant_enable == 'size-block' or template == 'product.quick' and settings.variant_enable_quick == 'size-block' %}
+    {%- assign size_block = true -%}
+    {% elsif section.settings.variant_enable == 'color-size-block' or template == 'product.quick' and settings.variant_enable_quick == 'color-size-block' %}
+    {%- assign color_size_block = true -%}
+    {% endif %}
+
+    {% if template == 'product.quick' %}
+    {%- assign variant_color_enable = settings.variant_color_enable_quick -%}
+    {% else %}
+    {%- assign variant_color_enable = section.settings.variant_color_enable -%}
+    {% endif %}
+
+    {% if variant_color_enable == 'var-img-zoom-block' %}
+    {%- assign img_size = '140x' -%}
+    {% else %}
+    {%- assign img_size = '72x' -%}
+    {% endif %}
+    
+    {% unless product.variants.size == 1 and section.settings.var_length_enable == false or product.variants.size == 1 and template == 'product.quick' and settings.var_length_enable_quick == false %}
+    
+    {% if block or color_size_block %}
+    {% render 'product-swatches' for product.options as swatch, var_color: var_color, swatch_color: swatch_color, var_size: var_size, swatch_size: swatch_size, block_width: block_width, hide: true, block: block, color_size_block: color_size_block, variant_color_enable: variant_color_enable, img_size: img_size, p_sect: p_sect %}
+    {% elsif color_block %}
+    {% render 'product-swatches' with swatch_color as swatch, var_color: var_color, swatch_color: swatch_color, var_size: var_size, swatch_size: swatch_size, block_width: block_width, hide: true, color_block: color_block, variant_color_enable: variant_color_enable, img_size: img_size, p_sect: p_sect %}
+    {% elsif size_block %}
+    {% render 'product-swatches' with swatch_size as swatch, var_color: var_color, swatch_color: swatch_color, var_size: var_size, swatch_size: swatch_size, block_width: block_width, hide: true, size_block: size_block, variant_color_enable: variant_color_enable, img_size: img_size, p_sect: p_sect %}
+    {% endif %}
+    
+    {% endunless %}    
+    
+    <select id="product-select-{{ section.id }}" 
+            class="{{ block_width }} center no-js hidden no-select product-select" 
+            name="id"
+            data-cols="{{ block_width }}{% if block %} hidden{% endif %}" 
+            data-color="{% if color_block or color_size_block %}{{ swatch_color }}{% endif %}"
+            data-size="{% if size_block or color_size_block %}{{ swatch_size }}{% endif %}"
+            data-length="{% if section.settings.var_length_enable or template == 'product.quick' and settings.var_length_enable_quick %}{% if product.has_only_default_variant %}1{% else %}0{% endif %}{% else %}1{% endif %}"
+            {% if hide_default_title %} style="display:none" aria-hidden="true"{% endif %}>        
+      {% for variant in product.variants %}
+      <option{% if variant == product.selected_or_first_available_variant %} selected="selected"{% endif %} value="{{ variant.id }}"{% if variant.inventory_management and variant.inventory_policy != 'continue' %} data-inv="{% if variant.inventory_quantity > 0 %}{{ variant.inventory_quantity }}{% else %}0{% endif %}"{% endif %} data-inc="{{ variant.incoming }}"{% if variant.incoming %} data-inc_date="{% if variant.incoming %}{% if variant.next_incoming_date != blank %}{% if variant.available %}{{ 'products.product.stock_more' | t }}{% else %}{{ 'products.product.stock_in' | t }}{% endif %} {{ variant.next_incoming_date | date: '%b %e' }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}{% endif %}"{% endif %}>{{ variant.title }} - {{ wcp_v_price | money }}</option>
+      {% endfor %}
+    </select>
+    
+    {% if section.settings.qty_enable or template == 'product.quick' and settings.qty_enable_quick %}
+    <div class="{{ block_width }}">
+      <span class="quantity form">
+        <button type="button" class="icon icon-minus btn qtybtn ignore qtyminus_{{ section.id }} text-center {{ template }}-template" field="updates_{{ section.id }}" aria-label="{{ 'products.general.minus' | t }}"></button>
+        <input name="quantity" type="number" inputmode="numeric" pattern="[0-9]*" value="{% unless variant.available %}0{% else %}1{% endunless %}" min="{% unless product.available %}0{% else %}1{% endunless %}" class="ignore quantity item-qty text-center" field="error_{{ section.id }}" id="updates_{{ section.id }}"{% if variant.inventory_management and variant.inventory_policy != 'continue' %} max="{{ variant.inventory_quantity }}"{% endif %} />                   
+        <button type="button" class="icon icon-plus btn qtybtn ignore qtyplus_{{ section.id }} text-center {{ template }}-template" field="updates_{{ section.id }}" aria-label="{{ 'products.general.plus' | t }}"></button>       
+        <label class="stock error hidden" id="error_{{ section.id }}"></label>
+      </span>
+    </div>
+    {% endif %}
+    <div class="{{ block_width }}{% if block_width == 'six' %} negative-left negative-right{% endif %}">
+      <span class="purchase{% if block_width == 'six' %} table-center{% endif %}">
+        {% unless variant.available %}
+        <div class="bottompad{% if variant.available %}{% if product.selling_plan_groups == empty %}{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}-quarter{% else %}-half{% endif %}{% endif %}{% endif %}{% if block_width == 'six' %} six{% endif %}">
+          <input type="submit" id="add-to-cart-{{ section.id }}" class="btn add-to-cart auto-full-width disabled outline" disabled="disabled" value="{{ 'products.product.sold_out' | t }}" />
+          <p class="feedback" aria-hidden="true">{%- render 'icons-theme', icon: 'times', size: '12' -%}{%- render 'icons-theme', icon: 'check', size: '12' -%} <span class="html"></span></p>
+        </div>
+        {% else %}
+        <div class="bottompad{% if variant.available %}{% if product.selling_plan_groups == empty %}{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}-quarter{% else %}-half{% endif %}{% endif %}{% endif %}{% if block_width == 'six' %} six{% endif %}">
+          <input type="submit" id="add-to-cart-{{ section.id }}" class="btn add-to-cart auto-full-width{% if product.selling_plan_groups == empty %}{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %} smart-outline{% endif %}{% endif %}" name="add" value="{{ 'products.product.add_to_cart' | t }}" />
+          <p class="feedback" aria-hidden="true">{%- render 'icons-theme', icon: 'times', size: '12' -%}{%- render 'icons-theme', icon: 'check', size: '12' -%} <span class="html"></span></p>
+        </div>
+        {% if product.selling_plan_groups == empty %}
+        {% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}
+        <div class="bottompad-half{% if block_width == 'six' %} six{% endif %} auto-full-width">
+           {% unless customer.tags contains p_discount_tag or customer.tags contains v_discount_tag %} 
+            {% if product.selected_or_first_available_variant.price != wcp_v_price %}<div style="display:none">{% endif %}{{ form | payment_button }}{% if product.selected_or_first_available_variant.price != wcp_v_price %}</div>{% endif %}        
+          {% endunless %}
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endunless %}
+      </span>
+    </div>
+
+  </div>
+
+{% endform %} 
+</div>
+
+{% unless product == empty %}
+<script type="application/json" id="ProductJson-{{ section.id }}">
+    {{ product | json }}
+</script>
+<script type="application/json" id="ModelJson-{{ section.id }}">
+    {{ product.media | where: 'media_type', 'model' | json }}
+</script>
+{% endunless %}
+{% assign wcp_prd_var = product %}
+{% unless wcp_prd_var == empty %}
+            <script type='application/json' class='wcp_json {% for wcp_v in wcp_prd_var.variants %} wcp_json_{{wcp_v.id}} {% endfor %} wcp_json_{{ wcp_prd_var.id }}' id='wcp_json_{{ wcp_prd_var.id }}' > 
+                {% render 'wcp_product_json' with wcp_prd_var %}
+            </script>
+{% endunless %}

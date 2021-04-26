@@ -1,0 +1,23 @@
+
+{% capture wpd_discounted_prices %}{%- render 'wcp_discount'  wcp_discount:product , wpd_is_render:'yes' -%}{% endcapture %}
+    
+    {%- capture wcp_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price' -%}{%- endcapture -%}
+    {% assign  wcp_price = wcp_price | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_compare_at_price != blank %}
+        {% assign  wcp_compare_at_price = wcp_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_compare_at_price = nil %}
+    {% endif %}
+
+{%- if settings.badge_enable and wcp_compare_at_price > wcp_price -%}
+<div class="badge"><span>{{ 'products.product.savings' | t }}<br/>
+  {%- if settings.badge_percentage_enable -%}  
+  {{ wcp_compare_at_price | minus: wcp_price | times: 100 | divided_by: wcp_compare_at_price | append: '%' }}
+  {%- else -%}
+  {{ wcp_compare_at_price | minus: wcp_price | money_without_trailing_zeros }}
+  {%- endif -%}
+  </span></div>
+{%- endif -%}
+

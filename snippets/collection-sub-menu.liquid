@@ -1,0 +1,85 @@
+{%- for link in linklists[settings.menu].links -%}
+
+{%- assign current = false -%}
+
+{%- assign link_handle = link.url | split:'/' | last -%}
+{%- if link_handle == collection.handle -%}
+{%- assign current = true -%}
+{%- endif -%}
+
+{%- if current -%}
+{%- capture sub_links -%}
+{% assign More = 0 %}
+{%- for link in link.links -%}
+{% assign More = More | plus:1 %}
+{%- if b_s_type == false -%}
+<li{% if More > 5 %} class="toggleable"{% endif %}>{{ link.title | link_to: link.url, link.title }}</li>{%- unless forloop.last -%},{%- endunless -%}
+{%- else -%}
+<option value="{{ link.url | downcase | replace: ' ', '-' }}">{{ link.title }}</option>{%- unless forloop.last -%},{%- endunless -%}
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- endif -%}
+
+{%- if link.links != blank -%}
+{%- for link in link.links -%}
+{%- assign current = false -%}
+{%- assign link_handle = link.url | split:'/' | last -%}
+{%- if link_handle == collection.handle -%}
+{%- assign current = true -%}
+{%- endif -%}
+{%- if current -%}
+{%- capture sub_links -%}
+{% assign More = 0 %}
+{%- for link in link.links -%}
+{% assign More = More | plus:1 %}
+{%- if b_s_type == false -%}
+<li{% if More > 5 %} class="toggleable"{% endif %}>{{ link.title | link_to: link.url, link.title }}</li>{%- unless forloop.last -%},{%- endunless -%}
+{%- else -%}
+<option value="{{ link.url | downcase | replace: ' ', '-' }}">{{ link.title }}</option>{%- unless forloop.last -%},{%- endunless -%}
+{%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- endif -%}
+{%- endfor -%}    
+{%- endif -%}
+{%- endfor -%}
+
+{% if b_s_type == false %}
+
+{% if sub_links != blank %}
+<div class="filter sub-menu clearfix" {{ block.shopify_attributes }}>
+  {% if b_s_label == 'above' %}<h5 class="mobile-hide">{% if b_s_title != blank %}{{ b_s_title | escape }}{% else %}{{ collection.title }}{% endif %}</h5>{% endif %} 
+  <div class="open-container open-container-filter">
+    <a href="javascript:;" class="open open-btn open-filter open-{{ section.id }}" title="{{ 'collections.general.open' | t }}" aria-controls="sub-menu" role="button" aria-label="{{ 'collections.general.open' | t }}"><span class="icon icon-open-plus btn text-center"></span><span class="h5">{% if b_s_title != blank %}{{ b_s_title | escape }}{% else %}{{ collection.title }}{% endif %}</span></a>
+    <div id="sub-menu" class="open-slide open-slide-filter">
+      <ul class="unformatted">
+        {%- assign sub_links_array = sub_links | split: ',' | uniq -%}
+        {% for line_item in sub_links_array %}      
+        {{ line_item }}  
+        {% endfor %}
+        {% if More > 5 %}<li class="open-more-container"><a href="javascript:;" class="open-more" title="{{ 'collections.general.open' | t }}" aria-controls="{{ 'collections.general.open' | t }}" role="button" aria-label="{{ 'collections.general.open' | t }}">{{ 'collections.sidebar.more' | t }}</a></li>{% endif %}
+      </ul>
+    </div>
+  </div>   
+</div>
+{% endif %}
+
+{% else %}
+
+{% if sub_links != blank %}
+<div class="filter sub-menu dropdown clearfix" {{ block.shopify_attributes }}>
+  <span class="form">
+    {% if b_s_label == 'above' %}<h5>{% if b_s_title != blank %}{{ b_s_title | escape }}{% else %}{{ collection.title }}{% endif %}</h5>{% endif %} 
+    <select>
+      <option value="{{ collection.url }}">{% if b_s_label == 'inside'  %}{% if b_s_title != blank %}{{ b_s_title | escape }}{% else %}{{ collection.title }}{% endif %}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option>
+      {%- assign sub_links_array = sub_links | split: ',' | uniq -%}
+      {% for line_item in sub_links_array %}  
+      {{ line_item }}
+      {% endfor %}
+    </select>
+  </span>
+</div>
+{% endif %}
+
+{% endif %}

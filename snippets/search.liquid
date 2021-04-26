@@ -1,0 +1,5 @@
+<form action="{{ routes.search_url }}" method="get" id="search-{{ section.id }}{{ id }}" class="search-form search-form-{{ section.id }} {{ search_class }} relative" role="search">
+  <input type="hidden" name="options[unavailable_products]" value="show" />
+  <input type="hidden" name="options[prefix]" value="last" />
+  <input name="q" type="text" value="{{ search.terms | escape }}" class="search-field" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" autocomplete="off"/>
+</form>

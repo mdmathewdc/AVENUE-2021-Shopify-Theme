@@ -1,0 +1,186 @@
+<section data-section-id="{{ section.id }}" 
+         data-section-type="collection_list_page" 
+         class="container bottompad-section collection clearfix">
+
+  <div class="twelve">    
+    <h1>{% if section.settings.title != blank %}{{ section.settings.title | escape }}{% else %}{{ 'collections.general.title_list' | t }}{% endif %}</h1>
+  </div>
+  
+  {% if section.blocks.size > 0 %}
+  <div class="product-loop table-center">
+    {% for block in section.blocks %}
+    {%- assign collection = collections[block.settings.collection] -%}
+    {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%} 
+    <div class="product two-half brands{% cycle ' first', '', '', '', '' %}">
+      <div class="product-border">
+        {% if section.settings.images_enable %}        
+        {% if collection == empty %}
+        <div class="product-thumb{% if section.settings.image_fit == 'cover' and collection != empty %} title-align{% endif %}">
+          <div class="relative">
+            <a href="{{ routes.all_products_collection_url }}">
+              {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </a>
+          </div>
+        </div>
+        {% else %}
+        {% if block.settings.block_img != blank %}
+        {%- assign img_src = block.settings.block_img -%}
+        {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.title }}{% endif %}{%- endcapture -%}
+        {% elsif section.settings.use_product_image or collection.image == blank %}
+        {%- assign img_src = collection.products.first.featured_media -%}
+        {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.products.first.title }}{% endif %}{%- endcapture -%}
+        {% else %}
+        {%- assign img_src = collection.image -%}
+        {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.title }}{% endif %}{%- endcapture -%}
+        {% endif %}
+        {%- assign size = 320 -%}
+        {% if img_src %}
+        <div class="product-thumb{% if section.settings.image_fit == 'cover' and collection != empty %} title-align{% endif %}">
+          <div class="relative">
+            <a href="{{ collection.url }}" title ="{{ collection.title }}" class="img-align">
+              {% if section.settings.image_fit =='cover' %}
+              <div class="lazypadding ">
+                {%- capture image_data -%}{%- render 'image-background-src', img_src: img_src, size: size -%}{%- endcapture -%}
+                {%- render 'image-background', bg_size: 'cover', image_data: image_data, img_src: img_src, size: size -%}
+              </div>
+              {% else %}
+              {%- render 'image-load', id: collection.id, img_src: img_src, size: size, alt: alt -%} 
+              {% endif %}           
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% endif %}
+        <div class="product-details{% if img_src or collection == empty and section.settings.images_enable %} text-center{% endif %}">
+          <div class="product-title collection">
+            <h5>{% if collection == empty %}<a href="{{ routes.all_products_collection_url }}">{{ 'homepage.onboarding.collection_title' | t }}</a>{% else %}<a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a>{% endif %}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% elsif collections.size > 0 %}
+  {%- assign number = section.settings.products_per_page -%}
+  {% paginate collections by number %}
+  <div class="product-loop table-center">
+    {% for collection in collections %}
+    <div class="product two-half brands{% cycle ' first', '', '', '', '' %}">
+      <div class="product-border">
+        {% if section.settings.images_enable %}
+        {% if section.settings.use_product_image or collection.image == blank %}
+        {%- assign img_src = collection.products.first.featured_media -%}
+        {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.products.first.title }}{% endif %}{%- endcapture -%}
+        {% else %}
+        {%- assign img_src = collection.image -%}
+        {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.title }}{% endif %}{%- endcapture -%}
+        {% endif %}
+        {%- assign size = 320 -%}
+        {% if img_src %}
+        <div class="product-thumb{% if section.settings.image_fit == 'cover' and collection != empty %} title-align{% endif %}">
+          <div class="center relative"{% if img_src %} style="max-width:{{ img_src.width }}px"{% endif %}>
+            <a href="{{ collection.url }}" title ="{{ collection.title | escape }}" class="img-align">
+              {% if section.settings.image_fit =='cover' %}
+              <div class="lazypadding ">
+                {%- capture image_data -%}{%- render 'image-background-src', img_src: img_src, size: size -%}{%- endcapture -%}
+                {%- render 'image-background', bg_size: 'cover', image_data: image_data, img_src: img_src, size: size -%}
+              </div>
+              {% else %}
+              {%- render 'image-load', id: collection.id, img_src: img_src, size: size, alt: alt -%} 
+              {% endif %} 
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+        <div class="product-details{% if img_src %} text-center{% endif %}">
+          <div class="product-title collection">
+            <h5><a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if paginate.pages > 1 %}
+  <div class="pagination">
+    <div>
+      {%- render 'pagination', paginate: paginate -%}
+    </div>
+  </div>
+  {% endif %}
+  {% endpaginate %}
+  {% else %}
+  <div class="twelve text-center"><p>{{ 'collections.general.no_matches_list' | t }}</p></div>
+  {% endif %}
+
+</section>
+
+{% schema %}
+  {
+    "name": "Collections list",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading"
+      },
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 5,
+        "max": 50,
+        "step": 5,
+        "label": "Default collections per page",
+        "default": 25
+      },
+      {
+        "type": "checkbox",
+        "id": "images_enable",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "use_product_image",
+        "label": "Show first product image",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "image_fit",
+        "label": "Image fit",
+        "default": "contain",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Fill space"
+          },
+          {
+            "value": "contain",
+            "label": "Fit to space"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "image_picker",
+            "id": "block_img",
+            "label": "Custom image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,46 @@
+<div class="table icon-text-table{% if section.settings.layout == false or template == 'index' %} center{% endif %}">
+  {% for block in section.blocks %}
+  {% case block.type %}
+
+  {% when 'icon' %}
+  <div class="icon-text">
+    <div class="table-cell{% if block.settings.block_img != blank %} img{% endif %}"> 
+      {% if block.settings.block_img != blank %}
+      {%- capture image_size -%}60x{%- endcapture -%}
+      <img src="{{ block.settings.block_img | img_url: image_size }}"
+           srcset="{{ block.settings.block_img | img_url: image_size }} 1x, {{ block.settings.block_img | img_url: image_size, scale: 2 }} 2x"
+           alt="{% if block.settings.block_img.alt != blank %}{{ block.settings.block_img.alt | escape }}{% else %}{{ block.settings.block_img | split: '/' | last | replace: '-', ' ' | replace: '_', ' ' | split: '.' | first | capitalize }}{% endif %}">
+      {% else %}
+      
+      {% if block.settings.icon_color == 'rgba(0,0,0,0)' or block.settings.icon_color == '' %}
+      {%- assign icon_color = settings.headline_font_color -%}
+      {% else %}
+      {%- assign icon_color = block.settings.icon_color -%}
+      {% endif %}
+
+      {% if block.settings.icon_color_h == 'rgba(0,0,0,0)' or block.settings.icon_color_h == '' %}
+      {%- assign icon_color_h = settings.button_color -%}
+      {% else %}
+      {%- assign icon_color_h = block.settings.icon_color_h -%}
+      {% endif %}
+      
+      {% if block.settings.text != blank %}
+      {%- assign icon_class = '' -%}
+      {% else %}
+      {%- assign icon_class = 'no-pad' -%}
+      {% endif %}
+
+      {%- render 'icons', icon: block.settings.icon, size: '26', icon_class: icon_class, color: icon_color, color_h: icon_color_h -%}
+      
+      {% endif %}    
+    </div>
+    {% if block.settings.text != blank %}
+    <div class="table-cell text-left no-pad">
+      {{ block.settings.text }}
+    </div>
+    {% endif %}
+  </div>
+
+  {% endcase %}
+  {% endfor %}
+</div>

@@ -1,0 +1,97 @@
+{% if block or color_block or size_block or color_size_block and swatch contains swatch_size or swatch contains swatch_color %}
+
+{% if p_sect == true %}{%- assign product = all_products[section.settings.product] -%}{% endif %}
+{%- assign is_color = false -%}
+{%- assign is_swatch = false -%}
+{%- assign option_index = 0 -%}
+
+{% for option in product.options %}
+{% if option contains swatch %}
+{%- assign is_swatch = true -%}
+{%- assign option_index = forloop.index0 -%}
+{%- assign downcased_option = swatch | handle -%}
+{% if downcased_option contains var_color %}
+{%- assign is_color = true -%}
+{% endif %}
+{% endif %}
+{% endfor %}
+
+{% if is_swatch %}
+
+{% if ignore %}
+
+{%- assign values = '' -%}
+{% for variant in product.variants %}
+{%- assign value = variant.options[option_index] -%}
+{% unless values contains value %}
+{%- assign values = values | join: '^' -%}
+{%- assign values = values | append: '^' | append: value -%} 
+{%- assign values = values | split: '^' -%}
+<a id="swatch-{{ value | handle }}-{{ option_index }}-{{ product.id }}{{ section.id }}" data-id="swatch-{{ value | handle }}-{{ option_index }}-{{ product.id }}{{ section.id }}" data-group="{{ product.id }}{{ section.id }}" href="{{ variant.url | within: collection }}" title="{{ 'layout.general.buy' | t }} {{ value | handle }} {{ product.title | escape }}" class="img-align product-thumb-var">
+  {%- capture id -%}{{ variant.id }}{{ section.id }}{{ content.id }}{%- endcapture -%}
+  {% if variant.image %}
+  {%- assign img_src = variant.featured_media.preview_image -%}
+  {% else %}
+  {%- assign img_src = product.featured_media.preview_image -%}  
+  {% endif %}  
+  {% if settings.title_align %}{% unless product.object_type != 'product'%}{% assign nopad = settings.title_align %}{% endunless %}{% endif %}
+  {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ 'layout.general.buy' | t }} {{ value | handle }} {{ product.title | escape }}{% endif %}{%- endcapture -%}
+  {%- render 'image-load', img_src: img_src, size: img_size, id: id, alt: alt, nopad: nopad -%}
+</a>
+{% endunless %}
+{% endfor %}
+
+{% else %}
+
+{% capture swatches %}
+{%- assign count = '0' -%}
+{%- assign values = '' -%}
+{% for variant in product.variants %}
+{%- assign value = variant.options[option_index] -%}
+{% unless values contains value %}
+{%- assign values = values | join: '^' -%}
+{%- assign values = values | append: '^' | append: value -%} 
+{%- assign values = values | split: '^' -%}
+<div class="swatch-element{% if is_color %} color{% endif %} {{ value | handle }}" data-group="{{ product.id }}{{ section.id }}" data-value="{{ value | escape }}">
+  <input id="{{ value | handle }}-{{ option_index }}-{{ product.id }}{{ section.id }}" 
+         class="selector"
+         data-id="{{ value | handle }}-{{ option_index }}-{{ product.id }}{{ section.id }}" 
+         data-loop="{{forloop.index}}"
+         data-group="{{ product.id }}{{ section.id }}"
+         type="radio" 
+         name="option-{{ option_index }}" 
+         data-handle="{{ value | handle }}"
+         value="{{ value | escape }}"/>
+  {% if is_color %}
+  <label class="error swatch-label hidden">{{ value }}</label>
+  {% if variant.featured_media and variant_color_enable contains 'var-img' %}{%- capture image_data -%}{{ variant.featured_media.preview_image | img_url: img_size }} {{ img_size | replace: 'x', 'w' }} {{ img_size | remove: 'x' | divided_by: variant.featured_media.preview_image.aspect_ratio | round }}h,{%- endcapture -%}{% endif %}
+  <label class="{% if variant.featured_media and variant_color_enable contains 'var-img' %}lazyload {% endif %}swatch-label color{% if variant_color_enable == 'var-img-block' or variant_color_enable == 'img-block' %} background-cover{% endif %}{% if value contains 'White' %} white{% endif %}" 
+         for="{{ value | handle }}-{{ option_index }}-{{ product.id }}{{ section.id }}" 
+         {% if variant.featured_media and variant_color_enable contains 'var-img' %}
+         data-bgset="{{ image_data | strip }}"
+         data-sizes="auto"
+         {% endif %}
+         style="background-color:{{ value | split: ' ' | last | handle }};{% if variant_color_enable == 'img-block' %}background-image: url({{ value | handle | append: '.png' | file_img_url: img_size }});{% endif %}">&nbsp;</label>
+  {% else %}
+  <label class="swatch-label" value="{{ value | escape }}" for="{{ value | handle }}-{{ option_index }}-{{ product.id }}{{ section.id }}">{{ value }}</label>
+  {% endif %}
+</div>
+{%- capture count -%}{% increment count %}{%- endcapture -%}
+{% endunless %}
+{% endfor %}
+{% endcapture %}
+
+{% unless count == '0' and section.settings.var_length_enable == false or count == '0' and template == 'product.quick' and settings.var_length_enable_quick == false %}
+<div class="{{ block_width }}{% if hide %} hidden{% endif %}">
+  <div class="swatch selectors" data-option-index="{{ option_index }}">
+    {% if hide %}<label>{{ swatch }}</label>{% endif %}
+    {{ swatches }}
+  </div>
+</div>
+{% endunless %}
+
+{% endif %}
+
+{% endif %}
+
+{% endif %}

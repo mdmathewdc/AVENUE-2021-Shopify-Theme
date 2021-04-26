@@ -1,0 +1,6 @@
+{%- layout none -%}
+{%- for tag in collection.tags -%}
+{%- if tag contains '_' -%}
+{{ tag | handle }}{%- unless forloop.last -%}, {%- endunless -%}
+{%- endif -%}
+{%- endfor -%}

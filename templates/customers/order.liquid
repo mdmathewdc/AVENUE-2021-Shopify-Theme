@@ -1,0 +1,163 @@
+<div class="container bottompad-section clearfix">
+
+  <div class="account-user twelve">
+
+    <div class="bottompad"><h1>{{ 'customer.order.title' | t }} {{ order.name }}</h1></div>
+
+    <div class="return bottompad"><a class="btn outline auto-width" href="{{ routes.account_url }}" title="{{ 'customer.account.return' | t }}">{{ 'customer.account.return' | t }}</a></div>
+
+    <h2 class="order-date">{{ 'customer.order.date' | t }} {{ order.created_at | date: '%A' }}, {{ order.created_at | date: settings.month_day_year }} {{ 'customer.order.at' | t }} {{ order.created_at | date: '%l:%M %P' }}</h2>
+
+    {% if order.cancelled %}
+    <div id="order-cancelled" class="errors">
+      <p>{{ 'customer.order.cancelled' | t }}</p>
+      <p><strong>{{ 'customer.order.cancelled_date' | t }}:</strong> {{ order.cancelled_at | date: '%A' }}, {{ order.cancelled_at | date: settings.month_day_year }} {{ 'customer.order.at' | t }} {{ order.cancelled_at | date: '%l:%M %P' }}<span class="separator" aria-hidden="true"></span><strong>{{ 'customer.order.cancelled_reason' | t }}:</strong> <span class="capitalize">{{ order.cancel_reason_label }}</span></p>
+    </div>
+    {% endif %}
+    
+    <div class="status capitalize bottompad"><strong>{{ 'customer.order.payment_status' | t }}:</strong> <span>{{ order.financial_status_label }}</span><span class="separator" aria-hidden="true"></span><strong>{{ 'customer.order.fulfillment_status' | t }}:</strong> <span>{{ order.fulfillment_status_label }}</span></div>
+  
+  </div>
+
+  <div class="cart-table account-table twelve">
+    <h3>{{ 'customer.order.orders_title' | t }}</h3>
+    {% assign images = false %} 
+    {% for line_item in order.line_items %}
+    <div id="{{ line_item.id }}" class="item relative product-id item-row table-center clearfix">
+      
+      {% if line_item.variant.featured_media %}
+      {% assign line_item_featured_media = line_item.variant.featured_media %}
+      {% elsif line_item.product.featured_media %}
+      {% assign line_item_featured_media = line_item.product.featured_media %}
+      {% endif %}
+      
+      {% if line_item_featured_media %}
+      <div class="three item-thumb title-align title-align-left">
+        <a href="{{ line_item.variant.url | within: collections.all }} " title="{{ line_item.title | escape }} ">
+          {% assign nopad = true %}          
+          {%- capture alt -%}{% if line_item_featured_media.alt %}{{ line_item_featured_media.alt }}{% else %}{{ line_item.title }}{% endif %}{%- endcapture -%}
+          {%- render 'image-load', img_src: line_item_featured_media, size: 180, id: line_item_featured_media.id, alt: line_item.title, nopad: nopad -%}
+        </a>
+      </div>
+      {% assign images = true %}
+      {% endif %}
+      <span class="item-details half table-center">
+        <div class="{% if line_item_featured_media %}nine{% else %}twelve{% endif %}">
+          <h5><a href="{{ line_item.variant.url | within: collections.all }}" title="{{ line_item.title | escape }}">{{ line_item.product.title }}</a>{% if line_item.variant.title and line_item.variant.title != 'Default Title' %}<br/><small>{{ line_item.variant.title }}</small>{% endif %}</h5>
+          {% if line_item.selling_plan_allocation %}
+          <h6 class="selling"><small>{{ line_item.selling_plan_allocation.selling_plan.name }}</small></h6>
+          {% endif %}
+          {%- assign property_size = line_item.properties | size -%}
+          {% if property_size > 0 %}
+          <p><small>
+            {% for p in line_item.properties %}
+            {% assign property_first_char = p.first | slice: 0 %}
+            {% if p.last != blank and property_first_char != '_' %}
+            <strong>{{ p.first }}:</strong> {% if p.last contains '/uploads/' %}<a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>{% else %}{{ p.last }}{% endif %}<br/>
+            {% endif %}
+            {% endfor %}
+          </small></p>
+          {% endif %}
+          {% if line_item.sku != blank or line_item.line_level_discount_allocations != blank or line_item.fulfillment%}
+          <p><small>
+            {% if line_item.sku != blank %}
+            <span class="sku"><strong>{{ 'customer.order.sku' | t }}:</strong> {{ line_item.sku }}</span><br/>
+            {% endif %}
+            {% if line_item.line_level_discount_allocations != blank %}
+            <strong>{{ 'customer.order.discount' | t }}:</strong> {% for discount_allocation in line_item.line_level_discount_allocations %}{{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})<br/>{% endfor %}
+            {% endif %}
+            {% if line_item.fulfillment %}
+            <strong>{{ 'customer.order.fulfilled_at' | t }}:</strong> {{ line_item.fulfillment.created_at | date: settings.month_day_year }}{% if line_item.fulfillment.tracking_number %}<span class="separator" aria-hidden="true"></span><strong>{{ 'customer.order.tracking' | t }}:</strong> <a href="{{ line_item.fulfillment.tracking_url }}" title="{{ line_item.fulfillment.tracking_company | escape }} #{{ line_item.fulfillment.tracking_number}}">{{ line_item.fulfillment.tracking_company }} #{{ line_item.fulfillment.tracking_number }}</a>{% endif %}
+            {% endif %}
+            </small></p>
+          {% endif %}
+          <div class="product-price"><h6><span class="order-money">{% if line_item.original_price != line_item.final_price %}{% if line_item.final_price > 0 %}{{ line_item.final_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %} <del>{% if line_item.original_price > 0 %}{{ line_item.original_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %}</del>{% else %}{{ line_item.original_price | money }}{% endif %} {{ 'customer.order.each' | t }}</span> x <span class="order-quantity"> {{ line_item.quantity }}</span> = <span class="order-total"> {% if line_item.original_line_price != line_item.final_line_price %}{% if line_item.final_line_price > 0 %}{{ line_item.final_line_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %} <del>{% if line_item.original_line_price > 0 %}{{ line_item.original_line_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %}</del>{% else %}{{ line_item.original_line_price | money }}{% endif %}</span>{%- render 'product-unit-price', variant: line_item -%}</h6></div>
+        </div>
+      </span>
+    </div>
+    {% endfor %}  
+  </div>  
+
+  <div class="cart-table account-table twelve bottompad-section">
+    <div class="item last table-center clearfix">
+      <div class="bottompad-quarter">
+        <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %}">{{ 'customer.order.subtotal' | t }}:</div>
+        <span class="item-details ignore half table-center">
+          <div class="nine orders text-left">{{ order.line_items_subtotal_price | money }}</div>
+        </span>
+      </div>
+    </div>
+    {% if order.cart_level_discount_applications != blank %}
+    <div class="bottompad-quarter">
+      <div class="item last table-center clearfix">
+        <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %}"><small>{% if order.cart_level_discount_applications.size > 1 %}{{ 'customer.order.discounts' | t }}{% else %}{{ 'customer.order.discount' | t }}{% endif %}</small></div>
+        <span class="item-details ignore half table-center">
+          <div class="nine orders text-left">&nbsp;</div>
+        </span>
+      </div>
+      {% for discount_application in order.cart_level_discount_applications %}
+      <div class="item last table-center clearfix">
+        <div class="bottompad-quarter">
+          <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %}"><small><strong>{{ discount_application.title }}:</strong></small></div>
+          <span class="item-details ignore half table-center">
+            <div class="nine orders text-left"><small><strong>-{{ discount_application.total_allocated_amount | money }}</strong></small></div>
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% for shipping_method in order.shipping_methods %}
+    <div class="item last table-center clearfix">
+      <div class="bottompad-quarter">
+        <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %}"><small><strong>{{ shipping_method.title }}:</strong></small></div>
+        <span class="item-details ignore half table-center">
+          <div class="nine orders text-left"><small><strong>{{ shipping_method.price | money }}</strong></small></div>
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+    {% if order.tax_lines != blank %}
+    <div class="bottompad-quarter">
+      <div class="item last table-center clearfix">
+        <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %}"><small>{{ 'customer.order.tax' | t }}</small></div>
+        <span class="item-details ignore half table-center">
+          <div class="nine orders text-left">&nbsp;</div>
+        </span>
+      </div>
+      {% for tax_line in order.tax_lines %}
+      <div class="item last table-center clearfix">
+        <div class="bottompad-quarter">
+          <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %}"><small><strong>{{ tax_line.title }} {{ tax_line.rate | times: 100 }}%:</strong></small></div>
+          <span class="item-details ignore half table-center">
+            <div class="nine orders text-left"><small><strong>{{ tax_line.price | money }}</strong></small></div>
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="item table-center clearfix">
+      <div class="bottompad-quarter">
+        <div class="three item-thumb ignore orders text-{% if images %}right{% else %}left{% endif %} toppad"><h3>{{ 'customer.order.total' | t }}:</h3></div>
+        <span class="item-details ignore half table-center">
+          <div class="nine orders text-left toppad"><h3>{{ order.total_price | money }}</h3></div>
+        </span>
+      </div>
+    </div>    
+  </div>
+  
+  <div class="account-user twelve">
+    <div class="six">
+      <h3>{{ 'customer.order.billing_address' | t }}</h3>
+      {{ order.billing_address | format_address }}
+    </div>
+    {% if order.shipping_address %}
+    <div class="account-user six">
+      <h3>{{ 'customer.order.shipping_address' | t }}</h3>
+      {{ order.shipping_address | format_address }}
+    </div>
+    {% endif %}
+  </div>
+
+</div>

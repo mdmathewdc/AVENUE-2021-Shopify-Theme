@@ -1,0 +1,87 @@
+<!doctype html>
+  {%- assign rtl = false -%}
+  {%- case request.locale.iso_code -%}
+  {%- when 'ar','arc','dv','fa','ha','he','khw','ks','ku','ps','ur','uz_AF','yi' -%}
+  {%- assign rtl = true -%}
+  {%- endcase -%}
+<html lang="{{ shop.locale }}" class="fonts-loading"{% if rtl %} dir="rtl"{% endif %}>
+  <head><script>
+  if(typeof Handlebars === 'undefined'){
+     var head = document.getElementsByTagName("head")[0];
+    script = document.createElement('script');
+    script.onload = function() { };
+    script.type = 'text/javascript';
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.min.js';
+    head.appendChild(script);
+  }  
+</script>
+
+    {%- render 'head' -%}
+    {%- render 'javascript' -%}
+    {{ content_for_header }}
+  {% render 'minmaxify-head' %}
+</head>
+  <body data-section-type="main-body"{% if rtl %} class="rtl"{% endif %}>    
+    <div id="ajaxBusy" style="background:#fff;content:'';height:100%;margin:0px;padding:0px;position:fixed;right:0;top:0;width:100%;z-index: 999999;"><div class="loader"></div></div>
+    <a href="#content" class="hidden btn outline skip-to">{{ 'layout.general.skipto' | t }}</a>
+    {%- render 'no-script' -%}
+    {% section 'header' %}
+    {% section 'header-announcement' %}
+    <main id="content" class="content {% if request.page_type != blank %}{{ request.page_type | split: '/' | first | replace: '404', 'error' }}{% else %}default{% endif %}-page{% if template.suffix != blank %} {{ template.suffix }}{% endif %}{% if template == 'gift_card' %} wrap{% endif %}" role="main">      
+      {{ content_for_layout }}
+    </main>
+    {% section 'footer-brands' %}
+    {% section 'footer' %}
+    <!-- WPD Start -->
+                {% if customer.tags.size > 0 and template != 'cart' %}
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                      let checkoutbtninterval = setInterval(function(){
+                        var x=document.querySelectorAll("input[name='checkout'], button[name='checkout'], input[name='goto_pp'], button[name='goto_pp'], input[name='goto_gc'], button[name='goto_gc'], [href$='checkout']");
+                        var WPD_RedirectToCart = function(e) {
+                          	e.stopPropagation();
+                            e.preventDefault();
+                            window.location = '/cart';
+                            };
+                            for (var i = 0; i < x.length; i++) {
+                                x[i].addEventListener('click', WPD_RedirectToCart, false);
+                            }
+},500)
+                });
+              </script>
+               {% endif %}
+         
+               {% if customer.tags.size > 0 and template == 'cart' %}
+                 {% include 'wcp_cart' %}
+               {% endif %}
+               <!-- WPD End -->
+    {% assign is_wcp_wholesale_customer = false %}
+{% assign active_discounts = shop.metafields.wcp_active_discounts.wcp_active_discounts %}
+{% assign active_discounts_array = active_discounts | split: ',' %}
+{% if shop.metafields.wcp_status.wcp_status != 'disabled' and customer %}
+  	{% for discount_key in active_discounts_array %}
+		{% assign key_split = discount_key | split: '-' %}
+    	{% assign key_split_length = key_split | size %}
+    	{% if key_split_length > 2 %}      		
+      		{% assign removeable_key = key_split.last | prepend: '-' %}
+      		{% assign wcp_test_customer_tag = discount_key | remove_first: removeable_key %}
+    	{% else %}
+      		{% assign wcp_test_customer_tag = key_split[0] %}      
+    	{% endif %}
+		{% if customer.tags contains wcp_test_customer_tag %}
+     		{% assign is_wcp_wholesale_customer = true %}     
+		{% endif %}
+	{% endfor %}
+{% endif %}
+{% if is_wcp_wholesale_customer == true %}
+ <style>
+		
+		.dynamic-checkout__content, .additional_checkout_buttons,.additional-checkout-buttons ,.shopify-payment-button
+		{
+			display: none !important;
+		}
+	</style>
+{% endif %}
+
+  </body>
+</html>

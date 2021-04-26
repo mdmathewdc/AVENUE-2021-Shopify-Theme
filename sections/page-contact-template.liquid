@@ -1,0 +1,270 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.settings.background_img != blank %} 
+{%- assign img_src = section.settings.background_img -%}
+{% if full_width == false %}{%- assign size = 1280 -%}{% endif %}
+{%- capture image_data -%}{%- render 'image-background-src', img_src: img_src, size: size -%}{%- endcapture -%}
+{% endif %}
+
+<section data-section-id="{{ section.id }}" data-section-type="page_contact" class="page bottompad-section clearfix">
+
+  <div class="{% if full_width %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload {% endif %}relative-{{ section.id }} clearfix"
+       {% if full_width and section.settings.background_img != blank %} 
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background-repeat: no-repeat;background-position: {{ section.settings.background_alignment }};"
+       {% endif %}>
+    {% if full_width and section.settings.background_img != blank %}
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '2560x' }}) {{ section.settings.background_alignment }} no-repeat;"></div>
+    </noscript>
+    {% endif %}
+
+    <div{% if full_width and section.settings.background_img != blank %} class="relative-{{ section.id }} background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container text-center clearfix">
+        <div{% if full_width == false and section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+          <div class="{% if full_width == false %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload relative-{{ section.id }} {% endif %}{% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.background_img != blank %}white {% endif %}clearfix"
+               {% if full_width == false and section.settings.background_img != blank %} 
+               data-bgset="{{ image_data | strip }}"
+               data-sizes="auto"
+               style="background-repeat: no-repeat;background-position: {{ section.settings.background_alignment }};"
+               {% endif %}>
+            {% if full_width == false and section.settings.background_img != blank %}
+            <noscript>
+              <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) {{ section.settings.background_alignment }} no-repeat;"></div>
+            </noscript>
+            {% endif %}
+
+            <div class="{% if full_width == false and section.settings.background_img != blank %}relative-{{ section.id }} background-overlay-{{ section.id }}{% endif %}">
+              <div class="container {% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}{% if full_width %}remove-pad {% else %}no-pad {% endif %}{% else %}remove-pad {% endif %}clearfix">
+                <div class="table {% if section.settings.background_img != blank %}content-height-{{ section.id }} {% endif %}{% if full_width == false %}{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}twelve{% endif %}{% endif %}">
+                  <div class="table-cell">
+                    <div class="twelve text-center">
+                      <h1>{{ page.title }}</h1>
+                      {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>  
+
+  <div id="form-container" class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+      <div{% if full_width == false and section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+        <div{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+          <div class="{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}background-white {% endif %}clearfix">
+            <div class="{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}twelve {% endif %}clearfix">
+              {% form 'contact', class: 'form-validation' %}
+
+              {% if form.posted_successfully? %}
+              <div class="twelve">
+                <div class="success successForm feedback">
+                  <p>{{ 'contact.form.post_success' | t }}</p>
+                </div>
+              </div>
+              {% endif %}
+
+              {% if form.errors %}
+              <div class="twelve">
+                <div class="errors errorForm feedback">
+                  <p>{{ 'contact.form.post_error' | t }} {{ 'contact.form.post_error_msg1' | t }} {{ form.errors | size | pluralize: 'error', 'errors' }} {{ 'contact.form.post_error_msg2' | t }}</p>
+                  <ul class="unformatted">
+                    {% for field in form.errors %}
+                    {% if field == 'form' %}
+                    <li>{{ form.errors.messages[field] }}</li>
+                    {% else %}
+                    <li>{{ form.errors.translated_fields[field] }} - {{ form.errors.messages[field] }}</li>
+                    {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+              {% endif %}
+
+              {% if page.content != blank %}
+              <div class="three left toppad">
+                {{ page.content }}
+              </div>
+              {% endif %}
+
+              <div id="contactFormWrapper" class="{% if page.content != blank %}eight right{% else %}twelve{% endif %} negative-left negative-right">
+                <div class="contact-info six">
+                  <span class="form">
+                    {%- assign name_attr = 'contact.form.name' | t | handle -%}
+                    <label for="contactFormName">{{ 'contact.form.name' | t }}</label>
+                    <input required type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name_placeholder' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required />
+                  </span>
+                  <span class="form">
+                    <label for="contactFormEmail">{{ 'contact.form.email' | t }}</label>
+                    <input required type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email_placeholder' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required />
+                  </span>
+                  <span class="form">
+                    {%- assign phone_attr = 'contact.form.phone' | t | handle -%}
+                    <label for="contactFormTelephone">{{ 'contact.form.phone' | t }}</label>
+                    <input type="number" id="contactFormTelephone" name="contact[{{ phone_attr }}]" placeholder="{{ 'contact.form.phone_placeholder' | t }}" pattern="[0-9\-]*" value="{% if form[phone_attr] %}{{ form[phone_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}" class="text-left" />
+                  </span>
+                </div>
+                <div class="contact-info six">
+                  <span class="form message">
+                    <label for="contactFormMessage">{{ 'contact.form.message' | t }}</label>
+                    <textarea required id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message_placeholder' | t }}" required >{% if form.body %}{{ form.body }}{% endif %}</textarea>
+                  </span>
+                  <span class="hidden extra" aria-hidden="true">
+                    <label for="contactFormNumber">Extra</label>
+                    <input type="text" id="contactFormNumber" name="Extra" value="">
+                  </span>
+                </div>
+                <div class="contact-info twelve">
+                  <span id="honeypot"></span>
+                  <noscript><span class="btn outline auto-full-width" id="contactFormSubmit">{{ 'layout.general.no_js' | t }}</span></noscript>
+                </div>
+              </div>
+
+              {% endform %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  .content-height-{{ section.id }} {
+    height:100%;
+    {% if section.settings.background_img != blank %}height:{{ section.settings.padding | times: 0.75 }}vh;min-height:{{ section.settings.padding | times: 0.75 }}vh{% else %}height:5vh;min-height:5vh;{% endif %}
+  }
+  .relative-{{ section.id }}{
+    {% if section.settings.background_img != blank %}margin-bottom:-{{ section.settings.padding | divided_by: 4 }}vh;padding-bottom:{{ section.settings.padding | divided_by: 4 }}vh;{% else %}margin-bottom:-5vh;padding-bottom:5vh;{% endif %}
+  }
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Contact page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      }, 
+      {
+        "type": "select",
+        "id": "background_alignment",
+        "label": "Image position",
+        "default": "center center",
+        "options": [
+          {
+            "label": "Top left",
+            "value": "left top"
+          },
+          {
+            "label": "Top center",
+            "value": "center top"
+          },
+          {
+            "label": "Top right",
+            "value": "right top"
+          },
+          {
+            "label": "Middle left",
+            "value": "left center"
+          },
+          {
+            "label": "Middle center",
+            "value": "center center"
+          },
+          {
+            "label": "Middle right",
+            "value": "right center"
+          },
+          {
+            "label": "Bottom left",
+            "value": "left bottom"
+          },
+          {
+            "label": "Bottom center",
+            "value": "center bottom"
+          },
+          {
+            "label": "Bottom right",
+            "value": "right bottom"
+          }
+        ]
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": false
+      }, 
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width banner",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 25
+      }, 
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-primary",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}

@@ -1,0 +1,51 @@
+<div class="sidebar">
+
+  {% if section.settings.include_newsletter %}
+  <div class="bottompad">
+    <h5>{{ 'blogs.sidebar.subscribe' | t }}</h5>
+    {%- render 'newsletter' -%}
+  </div>
+  {% endif %}
+
+  {% if section.settings.include_articles %}
+  <div class="recent-articles bottompad">
+    <h5 class="bottompad">{{ 'blogs.sidebar.recent_articles' | t }}</h5>
+    {%- assign current_article = article -%}
+    {%- assign counter = 0 -%}
+    {%- assign break_at = section.settings.number_of_articles -%}
+    {% for article in blog.articles %}
+    {% unless article.handle == current_article.handle %}
+    <div class="article bottompad">
+      {% if article.image and section.settings.include_image %}
+      <div class="bottompad-quarter center clearfix" style="max-width:{{ article.image.width }}px">
+        <a href="{{ article.url }}" title="{{ article.title | escape }}">
+          {%- capture alt -%}{% if article.image.alt %}{{ article.image.alt }}{% else %}{{ article.title }}{% endif %}{%- endcapture -%}
+          {%- render 'image-load', id: article.image.id, img_src: article.image, size: 600, alt: alt -%}
+        </a>
+      </div>
+      {% endif %}
+      <h6><a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title }}</a></h6>
+      {% if section.settings.include_author or section.settings.include_date %}
+      <h6 class="blog-data"><small>{% if section.settings.include_author %}{{ article.author }}{% endif %}{% if section.settings.include_author and section.settings.include_date %}<span class="separator" aria-hidden="true"></span>{% endif %}{% if section.settings.include_date %}{{ article.published_at | date: settings.month_day_year }}{% endif %}</small></h6>
+      {% endif %}
+    </div>
+    {%- assign counter = counter | plus: 1 -%}
+    {% if counter == break_at %}
+    {% break %}
+    {% endif %}
+    {% endunless %}  
+    {% endfor %}
+    {% if counter < 1 %}
+    <p>{{ 'blogs.sidebar.empty' | t }}</p>  
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if blog.all_tags.size > 0 and section.settings.include_tags %}
+  <div class="tags bottompad">
+    <h5>{{ 'blogs.article.tags' | t | replace:':','' }}</h5>
+    <h6 class="blog-data blog-tags">{% for tag in blog.all_tags %}<a href="{{ blog.url }}/tagged/{{ tag | handle }}" title="{{ blog.title | escape }}: {{ tag | escape }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}</h6>
+  </div>
+  {% endif %}
+
+</div>

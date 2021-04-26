@@ -1,0 +1,29 @@
+{% if img_src != blank %}
+  {%- if img_src.width >= size -%}
+    {%- if size < 220 -%}{{ img_src | img_url: 'master' }} {{ img_src.width }}w,{% endif %}
+    {%- if size >= 220 -%}{{ img_src | img_url: '220x' }} 220w,{%- endif -%}
+    {%- if size >= 320 -%}{{ img_src | img_url: '320x' }} 320w,{%- endif -%}
+    {%- if size >= 480 -%}{{ img_src | img_url: '480x' }} 480w,{%- endif -%}
+    {%- if size >= 600 -%}{{ img_src | img_url: '600x' }} 600w,{%- endif -%}
+    {%- if size >= 768 -%}{{ img_src | img_url: '768x' }} 768w,{%- endif -%}
+    {%- if size >= 960 -%}{{ img_src | img_url: '960x' }} 960w,{%- endif -%}
+    {%- if size >= 1024 -%}{{ img_src | img_url: '1024x' }} 1024w,{%- endif -%}
+    {%- if size >= 1280 -%}{{ img_src | img_url: '1280x' }} 1280w,{%- endif -%}
+    {%- if size >= 1600 -%}{{ img_src | img_url: '1600x' }} 1600w,{%- endif -%}
+    {%- if size >= 1900 -%}{{ img_src | img_url: '1900x' }} 1900w,{%- endif -%}
+    {%- if size >= 2560 -%}{{ img_src | img_url: '2560x' }} 2560w,{%- endif -%}
+  {%- else -%}
+    {%- if img_src.width < 220 -%}{{ img_src | img_url: 'master' }} {{ img_src.width }}w,{% endif %}
+    {%- if img_src.width >= 220 -%}{{ img_src | img_url: '220x' }} 220w,{%- endif -%}
+    {%- if img_src.width >= 320 -%}{{ img_src | img_url: '320x' }} 320w,{%- endif -%}
+    {%- if img_src.width >= 480 -%}{{ img_src | img_url: '480x' }} 480w,{%- endif -%}
+    {%- if img_src.width >= 600 -%}{{ img_src | img_url: '600x' }} 600w,{%- endif -%}
+    {%- if img_src.width >= 768 -%}{{ img_src | img_url: '768x' }} 768w,{%- endif -%}
+    {%- if img_src.width >= 960 -%}{{ img_src | img_url: '960x' }} 960w,{%- endif -%}
+    {%- if img_src.width >= 1024 -%}{{ img_src | img_url: '1024x' }} 1024w,{%- endif -%}
+    {%- if img_src.width >= 1280 -%}{{ img_src | img_url: '1280x' }} 1280w,{%- endif -%}
+    {%- if img_src.width >= 1600 -%}{{ img_src | img_url: '1600x' }} 1600w,{%- endif -%}
+    {%- if img_src.width >= 1900 -%}{{ img_src | img_url: '1900x' }} 1900w,{%- endif -%}
+    {%- if img_src.width >= 2560 -%}{{ img_src | img_url: '2560x' }} 2560w,{%- endif -%}
+  {%- endif -%}
+{% endif %}

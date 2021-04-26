@@ -1,0 +1,30 @@
+<script>
+window.themeInfo = {name: "Avenue"};
+window.theme = window.theme || {};
+theme.moneyFormat = {{ shop.money_format | json }};
+theme.routes_cart_url = {{ routes.cart_url | json }};
+theme.routes_cart_add_url = {{ routes.cart_add_url | json }};
+theme.routes_cart_change_url = {{ routes.cart_change_url | json }};
+theme.routes_all_products_collection_url = {{ routes.all_products_collection_url | json }};
+theme.routes_search_url = {{ routes.search_url | json }};
+theme.routes_product_recommendations_url = {{ routes.product_recommendations_url | json }};
+theme.language = {collections_general_update_cart: {{ 'collections.general.update_cart' | t | json }},collections_general_update_cart_message: {{ 'collections.general.update_cart_message' | t | json }},collections_general_update_cart_label_message: {{ 'collections.general.update_cart_label_message' | t | json }},collections_general_open: {{ 'collections.general.open' | t | json }},collections_sidebar_less: {{ 'collections.sidebar.less' | t | json }},collections_sidebar_more: {{ 'collections.sidebar.more' | t | json }},contact_form_send: {{ 'contact.form.send' | t | json }},layout_general_next: {{ 'layout.general.next' | t | json }},layout_general_unavailable: {{ 'layout.general.unavailable' | t | json }},products_general_details: {{ 'products.general.details' | t | json }},products_general_inv_msg_1: {{ 'products.general.inv_msg_1' | t | json }},products_general_inv_msg_2: {{ 'products.general.inv_msg_2' | t | json }},products_general_per: {{ 'products.general.per' | t | json }},products_product_add_to_cart: {{ 'products.product.add_to_cart' | t | json }},products_product_ajax_adding: {{ 'products.product.ajax_adding' | t | json  }},products_product_ajax_added: {{ 'products.product.ajax_added' | t | json }},products_product_ajax_thanks: {{ 'products.product.ajax_thanks' | t | json  }},products_product_ajax_updated: {{ 'products.product.ajax_updated' | t | json }},products_product_ajax_view: {{ 'products.product.ajax_view' | t | json }},products_product_available: {{ 'products.product.available' | t | json }},products_product_disabled_add_to_cart: {{ 'products.product.disabled_add_to_cart' | t | json }},products_product_free: {{ 'products.product.free' | t | json }},products_product_sku: {{ 'products.product.sku' | t | json }},products_product_sold_out: {{ 'products.product.sold_out' | t | json }},products_product_savings: {{ 'products.product.savings' | t | json }},products_general_per: {{ 'products.general.per' | t | json }},cart_general_checkout: {{ 'cart.general.checkout' | t | json }},cart_general_agree: {{ 'cart.general.agree' | t | json }},cart_general_each: {{ 'cart.general.each' | t | json }},cart_general_carttotal: {{ 'cart.general.carttotal' | t | json }},general_search_see_results: {{ 'general.search.see_results' | t | json }},general_validation_error: {{ 'general.validation.error' | t | json }},general_validation_required: {{ 'general.validation.required' | t | json }},general_validation_valid_email: {{ 'general.validation.valid_email' | t | json }},general_validation_valid_url: {{ 'general.validation.valid_url' | t | json }},general_validation_valid_number: {{ 'general.validation.valid_number' | t | json }},general_validation_match: {{ 'general.validation.match' | t | json }},general_validation_characters_exceed: {{ 'general.validation.characters_exceed' | t | json }},general_validation_characters_min: {{ 'general.validation.characters_min' | t | json }},general_validation_value_less: {{ 'general.validation.value_less' | t | json }},general_validation_value_greater: {{ 'general.validation.value_greater' | t | json }}};
+theme.settings = {cart: {{ settings.go_to_cart_enable | json }},quickView: {{ settings.quick_view_enable | json }},borders: {{ settings.borders_enable | json }},align: {{ settings.text_alignment | json }},title: {{ settings.title_align | json }},vendor: {{ settings.vendor_enable | json }},addThis: {% if settings.addthis != blank %}true{% else %}false{% endif %}};
+</script>
+
+<script>
+  window.lazySizesConfig = window.lazySizesConfig || {};
+  window.lazySizesConfig.loadMode = 1;
+  window.lazySizesConfig.loadHidden = false;
+</script>
+
+<script src="{{ 'script.lazy.js' | asset_url }}" async></script>
+<script src="{{ 'script.min.js' | asset_url }}" defer></script>
+
+{%- if template contains 'customers' -%}
+<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+{%- endif -%} 
+
+{%- if settings.addthis != blank -%}
+<script src="//s7.addthis.com/js/300/addthis_widget.js#pubid={{ settings.addthis }}" defer></script>
+{%- endif -%}

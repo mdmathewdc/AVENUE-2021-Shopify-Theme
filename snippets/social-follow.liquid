@@ -1,0 +1,85 @@
+{% if settings.addthis != blank %}
+<div class="addthis_horizontal_follow_toolbox"></div>
+{% elsif settings.social_twitter_link != blank or settings.social_facebook_link != blank or settings.social_pinterest_link != blank or settings.social_instagram_link != blank or settings.social_tumblr_link != blank or settings.social_snapchat_link != blank or settings.social_youtube_link != blank or settings.social_vimeo_link != blank %}
+<div class="socials{{ social-class }}">
+  <ul>
+    {% if settings.social_facebook_link != blank %}
+    <li>
+      <a href="{{ settings.social_facebook_link | escape }}" target="_blank" role="button" title="{{ 'general.social.facebook' | t }}" aria-label="{{ 'general.social.facebook' | t }}">
+        {%- render 'icons-social', icon: 'facebook' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_twitter_link != blank %}
+    <li>
+      <a href="{{ settings.social_twitter_link | escape }}" target="_blank" role="button" title="{{ 'general.social.twitter' | t }}" aria-label="{{ 'general.social.twitter' | t }}">
+        {%- render 'icons-social', icon: 'twitter' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_pinterest_link != blank %}
+    <li>
+      <a href="{{ settings.social_pinterest_link | escape }}" target="_blank" role="button" title="{{ 'general.social.pinterest' | t }}" aria-label="{{ 'general.social.pinterest' | t }}">
+        {%- render 'icons-social', icon: 'pinterest' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_instagram_link != blank %}
+    <li>
+      <a href="{{ settings.social_instagram_link | escape }}" target="_blank" role="button" title="{{ 'general.social.instagram' | t }}" aria-label="{{ 'general.social.instagram' | t }}">
+        {%- render 'icons-social', icon: 'instagram' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_tiktok_link != blank %}
+    <li>
+      <a href="{{ settings.social_tiktok_link | escape }}" target="_blank" role="button" title="{{ 'general.social.tiktok' | t }}" aria-label="{{ 'general.social.tiktok' | t }}">
+        {%- render 'icons-social', icon: 'tiktok' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_snapchat_link != blank %}
+    <li>
+      <a href="{{ settings.social_snapchat_link | escape }}" target="_blank" role="button" title="{{ 'general.social.snapchat' | t }}" aria-label="{{ 'general.social.snapchat' | t }}">
+        {%- render 'icons-social', icon: 'snapchat' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_tumblr_link != blank %}
+    <li>
+      <a href="{{ settings.social_tumblr_link | escape }}" target="_blank" role="button" title="{{ 'general.social.tumblr' | t }}" aria-label="{{ 'general.social.tumblr' | t }}">
+        {%- render 'icons-social', icon: 'tumblr' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_whatsapp_link != blank %}
+    <li>
+      <a href="{{ settings.social_whatsapp_link | escape }}" target="_blank" role="button" title="{{ 'general.social.whatsapp' | t }}" aria-label="{{ 'general.social.whatsapp' | t }}">
+        {%- render 'icons-social', icon: 'whatsapp' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_linkedin_link != blank %}
+    <li>
+      <a href="{{ settings.social_linkedin_link | escape }}" target="_blank" role="button" title="{{ 'general.social.linkedin' | t }}" aria-label="{{ 'general.social.linkedin' | t }}">
+        {%- render 'icons-social', icon: 'linkedin' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_youtube_link != blank %}
+    <li>
+      <a href="{{ settings.social_youtube_link | escape }}" target="_blank" role="button" title="{{ 'general.social.youtube' | t }}" aria-label="{{ 'general.social.youtube' | t }}">
+        {%- render 'icons-social', icon: 'youtube' -%}
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_vimeo_link != blank %}
+    <li>
+      <a href="{{ settings.social_vimeo_link | escape }}" target="_blank" role="button" title="{{ 'general.social.vimeo' | t }}" aria-label="{{ 'general.social.vimeo' | t }}">
+        {%- render 'icons-social', icon: 'vimeo' -%}
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}

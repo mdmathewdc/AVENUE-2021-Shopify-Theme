@@ -1,0 +1,67 @@
+<div class="container clearfix">
+
+  <div id="resetSuccess" class="hidden twelve"><div class="success"><p>{{ 'customer.recover_password.success' | t }}</p></div></div>
+
+  <div class="twelve"><h1>{{ 'customer.login.title' | t }}</h1></div>
+  
+  <div class="customer-login six left" id="customer_login">
+
+    {% form 'customer_login', class: 'form-validation' %}
+
+    {%- render 'form-errors-custom', errors: form.errors -%}
+
+    <div class="login_email clearfix bottompad-section">
+      <span class="form">
+        <label for="customer_email">{{ 'customer.login.email' | t }}</label>
+        <input type="email" value="" name="customer[email]" id="customer_email" placeholder="{{ 'customer.login.email' | t }}"  autocorrect="off" autocapitalize="off" required/>
+      </span>
+      <span class="form">
+        <label for="customer_password">{{ 'customer.login.password' | t }}{% if form.password_needed %}<span class="right"><small><a href="javascript:;" id="recover_password_btn" title="{{ 'customer.login.forgot_password' | t }}" class="form">{{ 'customer.login.forgot_password' | t }}</a></small></span>{% endif %}</label>
+        <input type="password" value="" name="customer[password]" id="customer_password" placeholder="{{ 'customer.login.password' | t }}" required />
+      </span>
+      <span>
+        <button class="btn" type="submit">{{ 'customer.login.sign_in' | t }}</button>
+      </span>
+    </div>
+    {% endform %}
+  </div>
+  
+  <div class="recover-password six left bottompad-section hidden" id="recover_password">
+    <h3>{{ 'customer.recover_password.title' | t }}</h3>
+    <p>{{ 'customer.recover_password.subtext' | t }}</p>
+
+    {% form 'recover_customer_password', class: 'form-validation' %}
+
+    {%- render 'form-errors-custom', errors: form.errors -%}
+    
+    <div class="clearfix">
+      <span class="form">
+        <label for="recover-email">{{ 'customer.recover_password.email' | t }}</label>
+        <input type="email" value="" name="email" id="recover-email" class="{% if form.posted_successfully? %}reset-success {% endif %}{% if form.errors %}reset-error {% endif %}clearfix" placeholder="{{ 'customer.recover_password.email' | t }}" autocorrect="off" autocapitalize="off" required />
+      </span>
+      <span>
+        <button class="btn" type="submit">{{ 'customer.recover_password.submit' | t }}</button><a href="javascript:;" id="customer_login_btn" title="{{ 'customer.recover_password.cancel' | t }}" class="account-secondary">{{ 'customer.recover_password.cancel' | t }}</a>
+      </span>
+    </div>
+    {% endform %}
+  </div>
+  
+  <div class="guest-login five right bottompad-section">
+    {% if shop.checkout.guest_login %}
+    <h3>{{ 'customer.login.guest_title' | t }}</h3>
+    <p>{{ 'customer.login.guest_subtext' | t }}</p>
+    {% form 'guest_login' %}
+    <div class=" bottompad clearfix">
+      <button class="btn" type="submit">{{ 'customer.login.guest_continue' | t }}</button>
+    </div>
+    {% endform %}
+    {% else %}
+    <h3>{{ 'customer.register.title' | t }}</h3>
+    <p>{{ 'customer.register.subtext' | t }}</p>
+    <div class=" bottompad clearfix">
+      <a class="btn" title="{{ 'customer.register.subtext' | t }}" href="{{ routes.account_register_url }}">{{ 'customer.register.submit' | t }}</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>

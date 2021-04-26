@@ -1,0 +1,44 @@
+{% if b_s_type == false %}
+
+<div class="filter clearfix" {{ block.shopify_attributes }}>
+  {% if b_s_label == 'above' and b_s_title != blank  %}<h5 class="mobile-hide">{{ b_s_title | escape }}</h5>{% endif %} 
+  <div class="open-container open-container-filter">
+    <a href="javascript:;" class="open open-btn open-filter open-{{ section.id }}" title="{{ 'collections.general.open' | t }}" aria-controls="vendors" role="button" aria-label="{{ 'collections.general.open' | t }}"><span class="icon icon-open-plus btn text-center"></span><span class="h5">{% if b_s_title != blank  %}{{ b_s_title | escape }}{% else %}{{ 'collections.general.vendors' | t }}{% endif %}</span></a>
+    <div id="vendors" class="open-slide open-slide-filter">
+      <ul class="unformatted">
+        {% assign More = 0 %}
+        {% for product_vendor in collection.all_vendors %}
+        {%- assign vendor_handle = product_vendor | handleize -%}
+        {% assign More = More | plus:1 %}
+        {% if collections[vendor_handle] != blank %}
+        <li{% if More > 5 %} class="toggleable"{% endif %}><a href="{{ collections[vendor_handle].url }}" title="{{ collections[vendor_handle].title }}">{{ collections[vendor_handle].title }}</a></li>
+        {% else %}
+        <li{% if More > 5 %} class="toggleable"{% endif %}>{{ product_vendor | link_to_vendor }}</li>
+        {% endif %}
+        {% endfor %}
+        {% if More > 5 %}<li class="open-more-container"><a href="javascript:;" class="open-more" title="{{ 'collections.general.open' | t }}" aria-controls="{{ 'collections.general.open' | t }}" role="button" aria-label="{{ 'collections.general.open' | t }}">{{ 'collections.sidebar.more' | t }}</a></li>{% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<div class="filter dropdown clearfix" {{ block.shopify_attributes }}>
+  <span class="form">
+    {% if b_s_label == 'above' and b_s_title != blank  %}<h5>{{ b_s_title | escape }}</h5>{% endif %} 
+    <select>
+      <option value="">{% if b_s_label == 'inside' and b_s_title != blank  %}{{ b_s_title | escape }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option> 
+      {% for product_vendor in collection.all_vendors %}
+      {%- assign vendor_handle = product_vendor | handleize -%}
+      {% if collections[vendor_handle] != blank %}
+      <option value="{{ collections[vendor_handle].url }}">{{ collections[vendor_handle].title }}</option>
+      {% else %}
+      <option value ="{{ product_vendor | url_for_vendor }}">{{ product_vendor }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+  </span>
+</div>
+
+{% endif %}

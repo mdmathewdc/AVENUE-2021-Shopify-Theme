@@ -1,0 +1,131 @@
+<style>
+  	
+  {{ settings.header_type | font_face: font_display: 'swap' }}
+  {{ settings.base_type | font_face: font_display: 'swap' }}
+  
+  :root {
+    
+    /* DEFAULT COLORS */
+
+	--white:#fff;
+    --black:#000;
+    --body_font_color:{{ settings.body_font_color }};
+    --body_font_color_05:{{ settings.body_font_color | color_modify: 'alpha', 0.05 }};
+    --body_font_color_25:{{ settings.body_font_color | color_modify: 'alpha', 0.25 }};
+    --body_font_color_50:{{ settings.body_font_color | color_modify: 'alpha', 0.50 }};
+    --body_font_color_lighten_15:{{ settings.body_font_color | color_lighten: 15 }};
+    --body_font_color_darken_10:{{ settings.body_font_color | color_darken: 10 }};
+    --body_font_hover_color:{{ settings.hover_font_color }};
+    --headline_font_color:{{ settings.headline_font_color }};
+    --headline_font_color_00:{{ settings.headline_font_color | color_modify: 'alpha', 0.00 }};
+    --headline_font_color_05:{{ settings.headline_font_color | color_modify: 'alpha', 0.05 }};
+    --headline_font_color_08:{{ settings.headline_font_color | color_modify: 'alpha', 0.08 }};
+    --customer_background_color:{{ settings.customer_background_color }};
+    --customer_font_color:{{ settings.customer_font_color }};
+    --customer_hover_font_color:{{ settings.customer_hover_font_color }};
+    --header_background_color:{{ settings.header_background_color }};
+    --header_font_color:{{ settings.header_font_color }};
+    --header_font_color_darken_15:{{ settings.header_font_color | color_darken: 15 }};
+    --header_hover_font_color:{{ settings.header_hover_font_color }};
+    --header_hover_font_color_darken_15:{{ settings.header_hover_font_color | color_darken: 15 }};
+    --announcement_background_color:{{ settings.announcement_background_color }};
+    --announcement_font_color:{{ settings.announcement_font_color }};
+    --announcement_hover_font_color:{{ settings.announcement_hover_font_color }};
+    --button_color:{{ settings.button_color }};
+    --button_color_25:{{ settings.button_color | color_modify: 'alpha', 0.25 }};
+    --button_color_lighten_30:{{ settings.button_color | color_lighten: 30 }};
+    --button_color_darken_15:{{ settings.button_color | color_darken: 15 }};
+    --hover_button_color:{{ settings.hover_button_color }};
+    --line_color:{{ settings.line_color }};
+    --line_color_05:{{ settings.line_color | color_modify: 'alpha', 0.05 }};
+    --line_color_darken_10:{{ settings.line_color | color_darken: 10 }};
+    --success_color:{{ settings.success_color }};
+    --error_color:{{ settings.error_color }};
+    --error_color_00:{{ settings.error_color | color_modify: 'alpha', 0.00 }};
+    --error_color_75:{{ settings.error_color | color_modify: 'alpha', 0.75 }};
+    --section_color_primary:{{ settings.section_color_primary }};
+    --section_color_secondary:{{ settings.section_color_secondary }};
+    --badge_color:{{ settings.badge_color }};
+    --badge_background_color:{{ settings.badge_background_color }};
+    --a11ygrey:#767676;
+    
+    /* DEFAULT FONTS */
+
+    --headline_font:{{ settings.header_type.family }}, {{ settings.header_type.fallback_families }};
+    --headline_font_fallback:{{ settings.header_type.fallback_families }};
+    --headline_font_weight:{{ settings.header_type.weight }};
+  	--headline_font_weight_bold:700;
+  	--headline_font_weight_medium:500;
+  	--headline_font_style:{{ settings.header_type.style }};
+
+    --body_font:{{ settings.base_type.family }}, {{ settings.base_type.fallback_families }};
+    --body_font_fallback:{{ settings.base_type.fallback_families }};        
+    --body_font_weight:{{ settings.base_type.weight }};
+    --body_font_weight_bold:700;
+    --body_font_weight_medium:500;
+  	--body_font_style:{{ base_font.style }};
+    
+    /* DEFAULT ICONS */
+
+    {%- assign button_color = settings.button_color | replace: '#','%23' -%}
+    {%- assign success_color = settings.success_color | replace: '#','%23' -%}
+    {%- assign error_color = settings.error_color | replace: '#','%23' -%}
+    --square_solid: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Crect x='7' y='7' width='10' height='10' fill='{{ button_color }}' stroke='{{ button_color }}'/%3E%3C/g%3E%3C/svg%3E");
+	--square_crossed: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath fill='none' stroke='currentColor' d='M7 16.999L17 6.999'/%3E%3Crect x='7' y='7' width='10' height='10' fill='none' stroke='currentColor'/%3E%3C/g%3E%3C/svg%3E");
+    --x_only: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath fill='none' stroke='{{ button_color }}' d='M7 16.999L17 6.999' style='stroke-linecap: square;'/%3E%3Cpath fill='none' stroke='{{ button_color }}' d='M17 16.999L7 6.999' style='stroke-linecap: square;'/%3E%3Crect x='-110' y='4.058' width='5.57' height='5.57' style='fill: rgb(216, 216, 216); stroke-linecap: square;'/%3E%3C/g%3E%3C/svg%3E");
+	--box: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M0.500 0.499 L23.500 0.499 L23.500 23.499 L0.500 23.499 Z' fill='none' stroke='currentColor'/%3E%3C/g%3E%3C/svg%3E");
+    --box_check: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg transform='matrix(1,0,0,1,0,0)'%3E%3Cpath d='M18 6.999L11 16.499 6 12.499' fill='none' stroke='{{ button_color }}' style='stroke-width: 2px;'%3E%3C/path%3E%3Cpath d='M0.500 0.499 L23.500 0.499 L23.500 23.499 L0.500 23.499 Z' fill='none' stroke='currentColor'/%3E%3C/g%3E%3C/svg%3E");
+	--circle: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M0.500 11.999 A11.500 11.500 0 1 0 23.500 11.999 A11.500 11.500 0 1 0 0.500 11.999 Z' fill='none' stroke='currentColor'/%3E%3C/g%3E%3C/svg%3E");
+    --circle_check: url("data:image/svg+xml,%3Csvg height='16' width='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg transform='matrix(1,0,0,1,0,0)'%3E%3Cpath d='M18 6.999L11 16.499 6 12.499' fill='none' stroke='{{ button_color }}' style='stroke-width: 2px;'%3E%3C/path%3E%3Cpath d='M0.500 11.999 A11.500 11.500 0 1 0 23.500 11.999 A11.500 11.500 0 1 0 0.500 11.999 Z' fill='none' stroke='currentColor'/%3E%3C/g%3E%3C/svg%3E");
+    --plus: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M12 6L12 18' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 1.5px;'/%3E%3Cpath d='M18 12L6 12' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 1.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --minus: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M18 12L6 12' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 1.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --times_w: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M 5 5 L 19 19' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px'/%3E%3Cpath d='M 19 5 L 5 19' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px'/%3E%3C/g%3E%3C/svg%3E");
+    --times_r: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M 5 5 L 19 19' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px'/%3E%3Cpath d='M 19 5 L 5 19' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px'/%3E%3C/g%3E%3C/svg%3E");
+    --times_g: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M 5 5 L 19 19' fill='none' stroke='{{ settings.line_color | color_darken: 10 | replace: '#','%23' }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px'/%3E%3Cpath d='M 19 5 L 5 19' fill='none' stroke='{{ settings.line_color | color_darken: 10 | replace: '#','%23' }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3px'/%3E%3C/g%3E%3C/svg%3E");
+    --open_plus: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M12 6L12 18' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3Cpath d='M18 12L6 12' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --open_minus: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M18 12L6 12' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --open_plus_header: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M12 6L12 18' fill='none' stroke='{{ settings.customer_font_color | replace: '#','%23' }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3Cpath d='M18 12L6 12' fill='none' stroke='{{ settings.customer_font_color | replace: '#','%23' }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --open_minus_header: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M18 12L6 12' fill='none' stroke='{{ settings.customer_font_color | replace: '#','%23' }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --open_plus_rev: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M12 6L12 18' fill='none' stroke='{{ button_color }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3Cpath d='M18 12L6 12' fill='none' stroke='{{ button_color }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --open_minus_rev_a: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M 0.75 12.016 C 0.75 20.677 10.125 26.089 17.625 21.759 C 21.105 19.749 23.25 16.036 23.25 12.016 C 23.25 3.356 13.875 -2.056 6.375 2.274 C 2.895 4.284 0.75 7.997 0.75 12.016 Z' fill='%23ffffff' stroke='{{ button_color }}' style='stroke-width: 1.5px;'/%3E%3Cpath d='M18 12L6 12' fill='none' stroke='{{ button_color }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --open_minus_rev_b: url("data:image/svg+xml,%3Csvg height='18' width='18' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M18 12L6 12' fill='none' stroke='{{ button_color }}' stroke-linecap='round' stroke-linejoin='round' style='stroke-width: 2.5px;'/%3E%3C/g%3E%3C/svg%3E");
+    --arrow_down: url("data:image/svg+xml,%3Csvg height='20' width='20' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M 4 8.5 L 12 15.5 C 12 15.5 12 15.5 12 15.5 L 20.03 8.521' fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='6px'/%3E%3Cpath d='M 4 8.5 L 11.985 15.487 C 11.985 15.487 11.985 15.487 11.985 15.487 L 20 8.521' fill='none' stroke='{{ settings.body_font_color | color_lighten: 15 | replace: '#','%23' }}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2px'/%3E%3C/g%3E%3C/svg%3E");
+    --bell: url("data:image/svg+xml,%3Csvg height='14' width='14' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs'%3E%3Cg%3E%3Cpath d='M18.5,19.5V15a6.5,6.5,0,0,0-4-6,2.5,2.5,0,0,0-5,0,6.5,6.5,0,0,0-4,6v4.5a2,2,0,0,1-2,2h17A2,2,0,0,1,18.5,19.5Z' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E%3Cpath d='M14,21.5a2,2,0,1,1-4,0' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E%3Cpath d='M3.5,9A5.5,5.5,0,0,1,9,3.5' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E%3Cpath d='M.5,9A8.5,8.5,0,0,1,9,.5' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E%3Cpath d='M20.5,9A5.5,5.5,0,0,0,15,3.5' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E%3Cpath d='M23.5,9A8.5,8.5,0,0,0,15,.5' fill='none' stroke='{{ error_color }}' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+        
+    /* DEFAULT SIZES */
+  
+	--base:{{ settings.font_size }}px;
+    --xx_small:calc(var(--base) * 0.75);	/* p  / 12 */
+    --x_small:calc(var(--base) * 0.875);	/* h6 / 14 */
+    --small:var(--base);					/* h5 / 16 */
+    --medium:calc(var(--base) * 1.125);		/* h4 / 18 */
+    --large:calc(var(--base) * 1.625);		/* h3 / 26 */
+    --x_large:calc(var(--base) * 2.125);	/* h2 / 34 */
+    --xx_large:calc(var(--base) * 3);		/* h1 / 48 */
+
+    --master_spacing:20px;
+    --swatches:36px;
+
+  }
+  
+  {%- capture char_count -%}{{ 'products.product.savings' | t }}{%- endcapture -%}
+  {%- assign char_count = char_count.size -%}
+
+  {%- if char_count > 5 -%}
+  {%- assign char_count_final = 6 -%}
+  {%- else -%}
+  {%- assign char_count_final = 9 -%}
+  {%- endif -%}
+
+  .badge {
+    height:{{ 'products.product.savings' | t | size | times: char_count_final }}px;
+    padding:{{ 'products.product.savings' | t | size | at_most: 6 }}px;
+    width:{{ 'products.product.savings' | t | size | times: char_count_final }}px;
+  }
+  
+  {% assign img_src = 'lifestyle-2' | placeholder_svg_tag | prepend: 'data:image/svg+xml,' | replace: '\n', ' ' | replace: '\r', ' ' | replace: '%', '%25' | replace: '"', '%22' | replace: "'", '%27' | replace: '&', '%26' | replace: '#', '%23' | replace: '{', '%7B' | replace: '}', '%7D' | replace: '<', '%3C' | replace: '>', '%3E' %}
+
+  .placeholder-svg-background {background-image:url('{{ img_src }}');}
+  
+</style>
+

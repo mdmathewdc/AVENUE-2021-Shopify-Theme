@@ -1,0 +1,277 @@
+{%- assign full_width = section.settings.full_width -%}
+
+<section data-section-id="{{ section.id }}"  
+         data-section-type="home_blog_list" 
+         data-carousel-type="section"
+         class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {{ section.settings.include_color_option }} colored-top-bottom {% endif %}{% if section.settings.include_color == 'color-none' %}margins-section {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {%- assign blog = blogs[section.settings.blog] -%}
+
+  {% if section.settings.title != blank or section.settings.sub_title != blank %}
+  <div class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve background-colored {{ section.settings.include_color }} colored-top"{% endif %}>
+        <div class="tab-body">
+          <div class="twelve {{ section.settings.text_alignment }} bottompad-half">
+            {% if section.settings.title != blank%}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+            {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if section.settings.use_slider and section.settings.post_limit > 1 %}
+  {%- assign slider = true -%}
+  {% else %}
+  {%- assign slider = false -%}
+  {% endif %}
+
+  <div class="container {% if full_width == false and section.settings.include_color != 'color-none' %}no-pad cancel {% endif %}{% if settings.animation_enable %}animate-section animate-section-margin load {% endif %}clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve background-colored {{ section.settings.include_color }}{% if section.settings.title != blank or section.settings.sub_title != blank %} colored-bottom{% else %} colored-top-bottom{% endif %}"{% endif %}>
+      <div{% if slider %} class="twelve"{% endif %}>
+        <div class="{% if slider %}glider-contain {% endif %}tab-body">
+
+          {%- assign block_width = section.settings.post_limit | downcase -%}
+          {% case block_width %}
+          {% when '1' %}
+          {%- assign block_width = 'twelve' -%}      
+          {%- assign size = 1280 -%}
+          {% when '2' %}
+          {%- assign block_width = 'six' -%}      
+          {%- assign size = 600 -%}
+          {% when '3' %}
+          {%- assign block_width = 'four' -%}      
+          {%- assign size = 480 -%}
+          {% when '4' %} 
+          {%- assign block_width = 'three' -%}      
+          {%- assign size = 320 -%}
+          {% endcase %}
+
+          <div {% if slider %}id="glider-carousel-{{ section.id }}" data-limit="{{ section.settings.post_limit }}" {% endif %}class="{% if slider %}glider no-drag {% endif %}table-center {{ section.settings.text_alignment }} clearfix">
+            <div class="product-loop{% if slider %} glider-track{% endif %}">
+              {% unless blog == blank or blog.articles_count == 0 %}
+              {% for article in blog.articles limit: section.settings.post_limit %}
+              <div class="product {{ block_width }} animate animate-loop-{{ forloop.index0 }}">
+                {% if article.image and section.settings.include_image %}
+                {%- capture id -%}{{ article.image.id }}{{ section.id }}{%- endcapture -%}
+                {%- capture alt -%}{% if article.image.alt %}{{ article.image.alt }}{% else %}{{ article.title }}{% endif %}{%- endcapture -%}
+                <div class="product-thumb">
+                  <a href="{{ article.url }}" title="{{ article.title | escape }}">
+                    <span class="center" style="max-width:{{ article.image.width }}px">
+                      {%- render 'image-load', img_src: article.image, size: size, id: id, alt: alt -%}
+                    </span>
+                  </a>
+                </div>
+                {% endif %}
+                <div class="{{ section.settings.text_alignment_post }}">
+                  <h5 class="blog-title">      
+                    <a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title }}</a>
+                  </h5>
+                  {% if section.settings.include_date %}<h6 class="blog-data">{{ article.published_at | date: settings.month_day_year }}</h6>{% endif %}
+                  {% if section.settings.include_author %}<p class="blog-data">{{ article.author }}</p>{% endif %}
+                  <p> 
+                    {% if article.excerpt != blank %}
+                    {{ article.excerpt | strip_html }}
+                    {% else %}
+                    {{ article.content | strip_html | truncatewords: 50 }}
+                    {% endif %} 
+                  </p>
+                  <a class="btn auto-width" href="{{ article.url }}"  title="{{ article.title | escape }}">{{ 'blogs.article.read_more' | t }}</a>
+                </div>
+              </div>
+              {% endfor %}
+
+              {% else %}
+
+              {% for i in (1..section.settings.post_limit) %}
+              <div class="product {{ block_width }} animate animate-loop-{{ forloop.index0 }}">
+                {% if section.settings.include_image %}
+                <div class="product-thumb">
+                  <a href="javascript:;" title="{{ 'homepage.onboarding.blog_title' | t }}">{{ 'image' | placeholder_svg_tag: 'placeholder-svg half' }}</a>
+                </div>
+                {% endif %}
+                <div class="{{ section.settings.text_alignment_post }}">
+                  <h5 class="blog-title">      
+                    <a href="javascript:;" title="{{ 'homepage.onboarding.blog_title' | t }}">{{ 'homepage.onboarding.blog_title' | t }}</a>
+                  </h5>
+                  {% if section.settings.include_date %}<h6 class="blog-data">{{ 'now' | date: settings.month_day_year }}</h6>{% endif %}
+                  {% if section.settings.include_author %}<p class="blog-data">{{ 'homepage.onboarding.blog_author' | t }}</p>{% endif %}
+                  <p>{{ 'homepage.onboarding.blog_excerpt' | t }}</p>
+                  <span class="btn auto-width">{{ 'blogs.article.read_more' | t }}</span>
+                </div>
+              </div>
+              {% endfor %}
+
+              {% endunless %}
+            </div>
+
+          </div>
+
+          {% if section.settings.include_all %}
+          <div class="toppad clearfix text-center">
+            <a class="btn outline additional" href="{{ blog.url }}"  title="{{ 'blogs.article.read_all' | t }} {{ blog.title }}">{{ 'blogs.article.read_all' | t }}</a>
+          </div>
+          {% endif %}
+
+          {% if slider %}
+          <div id="glider-pagination-{{ section.id }}" class="glider-pagination hidden tab-body relative">
+            <div id="glider-button-prev-{{ section.id }}" class="glider-button-prev" role="button" aria-label="{{ 'products.general.previous' | t }}">{%- render 'icons-theme', icon: 'left', size: '16' -%}</div>
+            <div id="glider-button-next-{{ section.id }}" class="glider-button-next" role="button" aria-label="{{ 'products.general.next' | t }}">{%- render 'icons-theme', icon: 'right', size: '16' -%}</div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+  {
+    "name": "Blog posts",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Blog posts"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Add your latest news to the homepage"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+           "label": "Right"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "id": "blog",
+        "type": "blog",
+        "label": "Category"
+      },
+      {
+        "type": "range",
+        "id": "post_limit",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "label": "Number of articles",
+        "default": 2
+      },
+      {
+        "type": "checkbox",
+        "id": "include_image",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "text_alignment_post",
+        "label": "Alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+           "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "include_all",
+        "label": "Show 'View all'"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_slider",
+        "label": "Use mobile slider for posts",
+        "default": true
+      }
+    ],
+    "presets": [
+      {
+        "name": "Blog posts",
+        "category": "Blog",
+        "settings": {
+          "blog": "News",
+          "post_limit": 2
+        }
+      }
+    ]
+  }
+{% endschema %}

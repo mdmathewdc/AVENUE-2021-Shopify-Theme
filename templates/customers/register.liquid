@@ -1,0 +1,47 @@
+<div class="container clearfix">
+  
+  <div class="twelve"><h1>{{ 'customer.register.title' | t }}</h1></div>
+  
+  <div class="six left bottompad-section clearfix">
+
+    {% form 'create_customer', class: 'form-validation' %}
+    {{ form.errors | default_errors }}
+
+    <span class="form">
+      <label for="first_name" class="login">{{ 'customer.register.first_name' | t }}</label>
+      <input type="text" name="customer[first_name]" id="first_name" placeholder="{{ 'customer.register.first_name' | t }}" {% if form.first_name %}value="{{ form.first_name }}"{% endif %} autocapitalize="words" required />
+    </span>
+
+    <span class="form">
+      <label for="last_name" class="login">{{ 'customer.register.last_name' | t }}</label>
+      <input type="text" name="customer[last_name]" id="last_name" placeholder="{{ 'customer.register.last_name' | t }}" {% if form.last_name %}value="{{ form.last_name }}"{% endif %} autocapitalize="words" required />
+    </span>
+
+    <span class="form">
+      <label for="email" class="login">{{ 'customer.register.email' | t }}</label>
+      <input required type="email" name="customer[email]" id="email" placeholder="{{ 'customer.register.email' | t }}" {% if form.email %} value="{{ form.email }}"{% endif %} autocorrect="off" autocapitalize="off" />
+    </span>
+
+    <span class="form">
+      <label for="password" class="login">{{ 'customer.register.password' | t }}</label>
+      <input required type="password" name="customer[password]" id="password" placeholder="{{ 'customer.register.password' | t }}" />
+    </span>
+
+    <span class="form">
+      <input type="hidden" name="customer[accepts_marketing]" value="" aria-hidden="true" tabindex="-1"/>
+      <input type="checkbox" name="customer[accepts_marketing]" checked="checked" />
+      {{ 'customer.register.subscribe' | t }}
+    </span>
+
+    <span>
+      <button class="btn" type="submit">{{ 'customer.register.submit' | t }}</button>
+    </span>
+    {% endform %}
+
+  </div>
+  <div class="guest-login five right bottompad-section clearfix">
+    <h3>{{ 'customer.register.login' | t }}</h3>
+    <p>{{ 'customer.register.login_subtext' | t }}</p>
+    <a class="btn" title="{{ 'customer.register.login_subtext' | t }}" href="{{ routes.account_login_url }}">{{ 'customer.register.login_submit' | t }}</a>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+<section data-section-id="{{ section.id }}" 
+         data-section-type="error_page" 
+         data-carousel-type="section"
+         class="bottompad {% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+  <div class="container clearfix">
+    <div class="twelve text-center">
+      <h1>{% if section.settings.title != blank %}{{ section.settings.title | escape }}{% else %}{{ 'general.404.title' | t }}{% endif %}</h1>
+      {% if section.settings.sub_title != blank %}<h2>{{ section.settings.sub_title | escape }}</h2>{% endif %}
+      {% if section.settings.body != blank %}{{ section.settings.body }}{% endif %}
+      {% if section.settings.include_search %}
+      <div class="search-form">
+        {%- render 'search', search_class: 'page' -%}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.include_products %}
+
+  {% if section.settings.collection != empty %}
+  {%- assign collection = collections[section.settings.collection] -%}
+  {% else %}
+  {%- assign collection = collections.all -%}
+  {% endif %}
+
+  {% if section.settings.use_slider and collection.all_products_count > 1 %}
+  {%- assign slider = true -%}
+  {% else %}
+  {%- assign slider = false -%}
+  {% endif %}
+
+  <div class="container{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+    <div{% if slider %} class="twelve"{% endif %}>
+      <div class="{% if slider %}glider-contain {% endif %}tab-body{% if settings.badge_enable and slider == false %} tab-body-badge{% endif %}">
+        <div {% if slider %}id="glider-carousel-{{ section.id }}" data-limit="4" {% endif %}class="{% if slider %}collection-products glider no-drag {% endif %}table-center clearfix">
+          <div class="product-loop center{% if slider %} glider-track{% endif %}">
+            {% for product in collection.products limit: 4 %}
+            {%- render 'product-loop', collection: collection, product: product, block_width: 'three', forloop_index0: forloop.index0 -%}
+            {% endfor %}
+          </div>
+        </div>
+        {% if slider %}
+        <div id="glider-pagination-{{ section.id }}" class="glider-pagination hidden tab-body relative">
+          <div id="glider-button-prev-{{ section.id }}" class="glider-button-prev" role="button" aria-label="{{ 'products.general.previous' | t }}">{%- render 'icons-theme', icon: 'left', size: '16' -%}</div>
+          <div id="glider-button-next-{{ section.id }}" class="glider-button-next" role="button" aria-label="{{ 'products.general.next' | t }}">{%- render 'icons-theme', icon: 'right', size: '16' -%}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+{% schema %}
+  {
+    "name": "404 page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "404 Page"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "This is not the page you are looking for"
+      },
+      {
+        "type": "richtext",
+        "id": "body",
+        "label": "Text",
+		"default": "<p>Nothing to see here, please move on. Click <a href=\"/collections/all\">here</a> to continue shopping.</p>"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_search",
+        "label": "Show search bar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_products",
+        "label": "Show products",
+        "default": true
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_slider",
+        "label": "Use mobile slider for products",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

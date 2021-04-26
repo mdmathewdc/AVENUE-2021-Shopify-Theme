@@ -1,0 +1,202 @@
+
+{% capture wpd_discounted_prices %}{%- render 'wcp_discount'  wcp_discount:product , wpd_is_render:'yes' -%}{% endcapture %}
+    
+    {%- capture wcp_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price' -%}{%- endcapture -%}
+    {% assign  wcp_price = wcp_price | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_compare_at_price != blank %}
+        {% assign  wcp_compare_at_price = wcp_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_compare_at_price = nil %}
+    {% endif %}
+    
+    {%- capture wcp_compare_at_price_min  -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price_min' -%}{%- endcapture -%}
+    {% assign  wcp_compare_at_price_min = wcp_compare_at_price_min | minus: 0 %}
+    
+    {%- capture wcp_compare_at_price_max  -%}{%- render 'wcp_render_discount', wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_compare_at_price_max' -%}{%- endcapture -%}
+    {% assign  wcp_compare_at_price_max = wcp_compare_at_price_max | minus: 0 %}
+    
+    {%- capture wcp_price_min -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price_min' -%}{%- endcapture -%}
+    {% assign  wcp_price_min = wcp_price_min | minus: 0 %}
+    
+    {%- capture wcp_price_max -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_price_max' -%}{%- endcapture -%}
+    {% assign  wcp_price_max = wcp_price_max | minus: 0 %}
+    
+    
+    {%- capture v_discount_tag -%}{%-render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'v_discount_tag'-%}{%- endcapture -%}
+    {% assign v_discount_tag = v_discount_tag | strip %}
+    
+    {%- capture p_discount_tag -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'p_discount_tag' -%}{%- endcapture -%}
+    {% assign p_discount_tag = p_discount_tag | strip %}
+    
+    {% assign raw_set_prices = product.metafields.wcp_set_prices.wcp_set_prices %}
+    {% assign set_prices_array = blank %}
+    {% if raw_set_prices %}
+        {% assign set_prices_array = raw_set_prices | split: ',' %}
+    {% endif %}
+    
+    {%- capture wcp_discount_value -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wpd_discounted_prices, price_variable:'wcp_discount_value' -%}{%- endcapture -%}
+    
+    {% capture wcp_v_discounted_prices %}{%- render 'wcp_variant' , wcp_variant:product.selected_or_first_available_variant , set_prices_array:set_prices_array , wpd_is_render:'yes', v_discount_tag : v_discount_tag , wcp_discount_value : wcp_discount_value -%}{%- endcapture -%}
+    
+    {%- capture wcp_v_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wcp_v_discounted_prices, price_variable:'wcp_v_price' -%}{%- endcapture -%}
+    {% assign  wcp_v_price = wcp_v_price | minus: 0 %}
+    
+    {%- capture wcp_v_compare_at_price -%}{%- render 'wcp_render_discount' , wpd_discounted_prices:wcp_v_discounted_prices, price_variable:'wcp_v_compare_at_price' -%}{%- endcapture -%}
+    {% if wcp_v_compare_at_price != blank %}
+        {% assign  wcp_v_compare_at_price = wcp_v_compare_at_price | minus: 0 %}
+    {% else %}
+    {% assign  wcp_v_compare_at_price = nil %}
+    {% endif %}
+<div class="item relative product-id item-row table-center clearfix">
+
+  {%- if settings.swatch_color != blank -%}
+  {%- assign var_color = settings.swatch_color | handleize -%}
+  {%- assign swatch_color = settings.swatch_color -%}
+  {%- else -%}
+  {%- assign var_color = 'products.general.color' | t | handleize -%}
+  {%- assign swatch_color = 'products.general.color' | t -%}
+  {%- endif -%}
+  
+  {%- render 'product-sale-badge', product: product -%}
+
+  {%- if canon -%}
+
+  {%- assign prod_opt_1 = product.options[0] | handleize -%}
+  {%- assign prod_opt_2 = product.options[1] | handleize -%}
+  {%- assign prod_opt_3 = product.options[2] | handleize -%}
+
+  {%- for variant in product.variants -%}
+
+  {%- if prod_opt_1 contains var_color and canon contains prod_opt_1 -%}
+  {%- assign var_opt = variant.option1 | handleize -%}
+  {%- elsif prod_opt_2 contains var_color and canon contains prod_opt_2 -%}
+  {%- assign var_opt = variant.option2 | handleize -%}
+  {%- elsif prod_opt_3 contains var_color and canon contains prod_opt_3 -%}
+  {%- assign var_opt = variant.option3 | handleize -%}
+  {%- else -%}
+  {%- assign var_opt = 'Default' -%}
+  {%- endif -%}
+
+  {%- if canon contains var_opt -%}
+  {%- if variant.featured_media -%}
+  {%- assign img_src = variant.featured_media.preview_image -%}
+  {%- else -%}
+  {%- assign img_src = product.featured_media.preview_image -%}
+  {%- endif -%}
+  {%- break -%}
+  {%- else -%}
+  {%- assign img_src = product.featured_media.preview_image -%}
+  {%- endif -%}
+
+  {%- endfor -%}
+
+  {%- else -%}
+  {%- assign img_src = product.featured_media.preview_image -%}
+  {%- endif -%}
+
+  {% if product.media.size > 0 %}
+  <div class="product-thumb{% if settings.image_hover and product.media.size > 1 %} enable-thumb-hover{% endif %} item-thumb title-align title-align-left two negative-left">
+    <div class="relative"> 
+      {% assign nopad = true %}
+      <a href="{{ product.url | within: collection }}" title="{{ 'layout.general.buy' | t }} {{ product.title | escape }}" class="img-align product-thumb-main{% if settings.image_hover and product.media.size > 1 %} product-thumb-load{% endif %}" data-group="{{ product.id }}{{ section.id }}">
+        {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ product.title }}{% endif %}{%- endcapture -%}
+        {%- render 'image-load', img_src: img_src, id: product.featured_media.id, size: 250, alt: alt, nopad: nopad -%}
+      </a>
+      {% if settings.image_hover and product.media.size > 1 %} 
+      <a href="{{ product.url | within: collection }}" title="{{ 'layout.general.buy' | t }} {{ product.title | escape }}" class="img-align product-thumb-hover">
+        {%- capture alt -%}{% if product.media[1].preview_image.alt %}{{ product.media[1].preview_image.alt }}{% else %}{{ product.title }}{% endif %}{%- endcapture -%}
+        {%- render 'image-load', img_src: product.media[1].preview_image, id: product.media[1].id, size: 250, alt: alt, nopad: nopad -%}
+      </a>
+      {% endif %}
+      {% if settings.variant_color_enable != 'none' %}
+      {% render 'product-swatches' with swatch_color as swatch, var_color: var_color, swatch_color: swatch_color, product: product, block: true, ignore: true, img_size: 250 %}
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+  <span class="item-details{% if product.media.size > 0 %} half{% else %} full{% endif %}">
+    <div class="{% if product.media.size > 0 %}four{% else %}six{% endif %}">
+      <div class="item-title">
+        <h5><a href="{{ product.url | within: collection }}" title="{{ product.title | escape }}">{{ product.title }}</a></h5>
+        {% if settings.variant_color_enable != 'none' %}
+        {%- assign variant_color_enable = settings.variant_color_enable -%}
+        {% if variant_color_enable == 'var-img-zoom-block' %}
+        {%- assign img_size = '100x' -%}
+        {% else %}
+        {%- assign img_size = '52x' -%}
+        {% endif %}
+        {% render 'product-swatches' with swatch_color as swatch, var_color: var_color,swatch_color: swatch_color, product: product, block_width: 'clearfix', hide: false, block: true, variant_color_enable: variant_color_enable, img_size: img_size %}
+        {% endif %}
+      </div>
+      {% if settings.reviews_enable %}
+      <div class="reviews item-reviews">
+        <!-- To add a new review app, install code between the comments -->
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+        <!-- End comments -->
+      </div>
+      {% endif %}
+
+      <h5 class="offers hidden">
+        <span class="price-preview price price-field">     
+          {% if wcp_price_min > 0 %} 
+          {% if product.price_varies %}{{ 'products.product.from' | t }}{% endif %}
+          {%- assign variant = product.variants | sort: 'price' | first -%}
+          {{ wcp_price | money }}{% if wcp_compare_at_price > wcp_price %} | <del>{{ wcp_compare_at_price | money }}</del>{% endif %}
+          {% else %}
+          {% if product.price_varies %}    
+          {%- assign variant = product.variants | sort: 'price' | last -%}
+          {{ 'products.product.free' | t }} - {{ wcp_price_max | money }}{%- assign variant_free = true -%}
+          {% else %}
+          <span style="display:none">{{ wcp_price | money }}</span>{{ 'products.product.free' | t }}
+          {% endif %}
+          {% endif %}
+        </span>
+        {%- render 'product-unit-price', variant: product, variant_free: false, variant_slash: 'true' -%}
+      </h5>
+      {% if settings.vendor_enable %}
+      <p id="product-logistics-{{ product.id }}" class="product-logistics{% unless product.media.size == 0 or settings.quick_collection_hover == false %} no-pad{% endunless %}">
+        <span class="vendors">
+          {%- assign product_vendor_handle = product.vendor | handle -%}
+          {% if collections[product_vendor_handle].handle == product_vendor_handle %}
+          {%- assign vendor_url = collections[product_vendor_handle].url -%}
+          {% else %}
+          {%- assign vendor_url = product.vendor | url_for_vendor -%}
+          {% endif %}
+          {{ product.vendor | link_to: vendor_url, product.vendor }}
+        </span>
+      </p>
+      {% endif %}
+      {% if settings.product_availability_enable and product.available == false and variant.incoming %}<p class="error-text"><small><span class="icon icon-bell"></span>{% if variant.next_incoming_date != blank %}{{ 'products.product.stock_in' | t }} {{ variant.next_incoming_date | date: '%b %e'  }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}</small></p>{% endif %}
+    </div>
+    <div class="three text-center price-preview-hidden">
+      <h5 class="offers">
+        <span class="price-preview price price-field">
+          {% if wcp_price_min > 0 %} 
+          {% if product.price_varies %}<small>{{ 'products.product.from' | t }}<br/></small>{% endif %}
+          {%- assign variant = product.variants | sort: 'price' | first -%}
+          {{ wcp_price | money }}{% if wcp_compare_at_price > wcp_price %}<br/><del>{{ wcp_compare_at_price | money }}</del>{% endif %}
+          {% else %}
+          {% if product.price_varies %}    
+          {%- assign variant = product.variants | sort: 'price' | last -%}
+          {{ 'products.product.free' | t }} - {{ wcp_price_max | money }}{%- assign variant_free = true -%}
+          {% else %}
+          <span style="display:none">{{ wcp_price | money }}</span>{{ 'products.product.free' | t }}
+          {% endif %}
+          {% endif %}
+        </span>
+        {%- render 'product-unit-price', variant: product, variant_free: false, variant_slash: 'true' -%}
+      </h5>
+    </div>
+    <div class="three text-center">
+      {%- render 'product-loop-buttons', product: product -%}
+    </div>
+  </span>{% assign wcp_prd_var = product %}
+{% unless wcp_prd_var == empty %}
+            <script type='application/json' class='wcp_json {% for wcp_v in wcp_prd_var.variants %} wcp_json_{{wcp_v.id}} {% endfor %} wcp_json_{{ wcp_prd_var.id }}' id='wcp_json_{{ wcp_prd_var.id }}' > 
+                {% render 'wcp_product_json' with wcp_prd_var %}
+            </script>
+{% endunless %}
+
+</div>

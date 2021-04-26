@@ -1,0 +1,398 @@
+{%- assign full_width = section.settings.full_width -%}
+
+<section data-section-id="{{ section.id }}" 
+         data-section-type="home_slideshow"
+         data-slideshow-type="text"
+         id="slideshow-{{ section.id }}"
+         class="{% if section.blocks.size > 1 %}glider-enabled {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  <div class="{% unless full_width %}container no-pad {% endunless %}clearfix">
+    <div class="glider-contain tab-body">
+
+      <div{% if section.blocks.size > 1 %} id="glider-carousel-{{ section.id }}" data-glider-autoplay="{{ section.settings.auto_rotate_every | times: 1000 }}" data-glider-autorotate="{% if section.settings.auto_rotate %}true{% else %}false{% endif %}" class="glider slideshow"{% endif %}>
+        <div class="glider-track slideshow">
+          {% if section.blocks.size == 0 %}
+          <div class="tab-body placeholder-svg-background with-height background-cover lazyload clearfix">
+            <div class="table content-height-{{ section.id }}">
+              <div class="table-cell">
+                <div class="container{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+                  <div class="six animate text-center center white">
+                    <h2 class="h1">{{ 'homepage.onboarding.slide_no_title' | t }}</h2>
+                    <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          {% for block in section.blocks %}
+
+          {% if block.settings.title != blank or block.settings.sub_title != blank or block.settings.body or block.settings.link != blank or block.settings.use_background_img and block.settings.background_img != blank %}
+          {%- assign section_onboarding = false -%}
+          {% else %}
+          {%- assign section_onboarding = true -%}
+          {% endif %}
+
+          {% if block.settings.use_background_img and block.settings.background_img != blank %}
+          {%- assign img_src = block.settings.background_img -%}
+          {% if full_width == false %}{%- assign size = 1280 -%}{% endif %}
+          {%- capture image_data -%}{%- render 'image-background-src', img_src: img_src, size: size -%}{%- endcapture -%}
+          {% endif %}
+
+          <div class="tab-body{% if section.blocks.size > 1 %} glider-slide{% if forloop.first %} active center visible{% endif %}{% endif %}"{% if section.blocks.size > 1 %} data-gslide="{{ forloop.index0 }}" data-glider="{% if forloop.first %}loaded{% else %}unloaded{% endif %}"{% endif %} {{ block.shopify_attributes }}>
+            <div{% if full_width %} class="{% if block.settings.use_background_img and block.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload"{% endif %}
+                 {% if full_width and block.settings.use_background_img and block.settings.background_img != blank %} 
+                 data-bgset="{{ image_data | strip }}"
+                 data-sizes="auto"
+                 style="background-repeat: no-repeat;background-position: {{ block.settings.background_alignment }};"
+                 {% endif %}>
+              {% if full_width and block.settings.use_background_img and block.settings.background_img != blank %}
+              <noscript>
+                <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '2560x' }}) {{ block.settings.background_alignment }} no-repeat;"></div>
+              </noscript>
+              {% endif %}
+              <div class="relative{% if full_width %} background-overlay background-overlay-{{ block.id }}{% endif %}">
+                <div{% if full_width %} class="container clearfix"{% endif %}>
+
+                  {%- assign block_width = block.settings.block_width | downcase -%}
+                  {% case block_width %}
+                  {% when '4' %}
+                  {%- assign block_width = 'four' -%}
+                  {% when '6' %}
+                  {%- assign block_width = 'six' -%}
+                  {% when '8' %}
+                  {%- assign block_width = 'eight' -%}
+                  {% when '9' %}
+                  {%- assign block_width = 'nine' -%}
+                  {% endcase %}
+
+                  <div class="{% if full_width == false %}{% if block.settings.use_background_img and block.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %}{% if block.settings.font_color %}{% if block.settings.use_background_img or block.settings.background_img_overlay != blank and block.settings.background_img_overlay_opacity > 0 %}white {% endif %}{% endif %}clearfix"
+                       {% if full_width == false and block.settings.use_background_img and block.settings.background_img != blank %} 
+                       data-bgset="{{ image_data | strip }}"
+                       data-sizes="auto"
+                       style="background-repeat: no-repeat;background-position: {{ block.settings.background_alignment }};"
+                       {% endif %}>
+                    {% if full_width == false and block.settings.use_background_img and block.settings.background_img != blank %}
+                    <noscript>
+                      <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) {{ block.settings.background_alignment }} no-repeat;"></div>
+                    </noscript>
+                    {% endif %}                  
+                    <div class="table content-height-{{ section.id }}{% if settings.animation_enable %} animate-section load{% endif %}{% if full_width == false %} relative{% endif %}{% if full_width == false %} twelve{% if block.settings.use_background_img or block.settings.background_img_overlay != blank and block.settings.background_img_overlay_opacity > 0 %} background-overlay background-overlay-{{ block.id }}{% endif %}{% endif %}">
+                      {% if block.settings.link != blank %}<a href="{{ block.settings.link | escape }}" title="{% if block.settings.title != blank %}{{ block.settings.title | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}" class="absolute"></a>{% endif %}
+                      {% if section_onboarding or block.settings.title != blank or block.settings.sub_title != blank or block.settings.body != blank or block.settings.link != blank %}
+                      <div class="table-cell {{ block.settings.vertical_content_alignment }}">
+                        <div class="{{ block_width }} mobile animate {{ block.settings.text_alignment}} {{ block.settings.horizontal_content_alignment }}{% if section.blocks.size > 1 %} bottompad{% endif %}">
+                          {% if section_onboarding %}
+                          <h2>{{ 'homepage.onboarding.no_title' | t }}</h2>
+                          <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+                          {% else %}
+                          {% if block.settings.title != blank %}<h2 class="h1">{{ block.settings.title | escape }}</h2>{% endif %}
+                          {% if block.settings.sub_title != blank %}<h3>{{ block.settings.sub_title | escape }}</h3>{% endif %}
+                          {% if block.settings.body != blank %}{{ block.settings.body }}{% endif %}
+                          {% if block.settings.link != blank %}<a href="{{ block.settings.link | escape }}" title="{% if block.settings.title != blank %}{{ block.settings.title | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}" class="btn{% if block.settings.outline_button %} outline{% endif %}{% if section.blocks.size == 1 %} bottompad{% endif %}">{% if block.settings.button != blank %}{{ block.settings.button | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}</a>{% endif %}
+                          {% endif %}
+                        </div>
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              {% if block.settings.background_img_overlay_opacity > 0 %}<style>{%- assign alpha = block.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ block.id }}{background:{{ block.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}</style>{% endif %}
+            </div>
+          </div>
+
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if section.blocks.size > 1 %}
+      <div id="glider-pagination-{{ section.id }}" class="glider-pagination slideshow-carousel">
+        <div id="glider-button-prev-{{ section.id }}" class="tabindex glider-button-prev" role="button" aria-label="{{ 'products.general.previous' | t }}">{%- render 'icons-theme', icon: 'left', size: '16' -%}</div>
+        <div id="glider-button-next-{{ section.id }}" class="tabindex glider-button-next" role="button" aria-label="{{ 'products.general.next' | t }}">{%- render 'icons-theme', icon: 'right', size: '16' -%}</div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</section>
+
+<style>
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:{{ section.settings.padding }}vh}
+</style>
+
+{% schema %}
+  {
+    "name": "Slideshow with text",
+	"max_blocks": 4,
+    "settings": [
+      {
+        "type": "paragraph",
+    	"content": "To avoid image cropping, try the 'Slideshow with Image' section. [Learn more](https:\/\/redplugdesign.zendesk.com\/hc\/en-us\/articles\/360020792053)"
+      },
+      {
+        "type": "checkbox",
+        "id": "auto_rotate",
+        "label": "Auto-rotate slides",
+        "default": false
+      }, 
+      {
+        "type": "range",
+        "id": "auto_rotate_every",
+        "min": 5,
+        "max": 10,
+        "step": 1,
+        "unit": "sec",
+        "label": "Change slides every",
+        "default": 5
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 50
+      }
+    ],
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+		  {
+             "type": "header",
+             "content": "Slide",
+             "info": "If you do not want the image to crop, consider using the Slideshow with Image section"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+			"default": "Slideshow with text"
+          },
+          {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Subheading",
+			"default": "Display large images and promotional text"
+          },
+          {
+            "type": "richtext",
+            "id": "body",
+            "label": "Text"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "button",
+            "label": "Button"
+          },
+          {
+            "type": "checkbox",
+            "id": "outline_button",
+            "label": "Outline button",
+            "default": false
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Text alignment",
+            "default": "text-center",
+            "options": [
+              {
+                "value": "text-left",
+                "label": "Left"
+              },
+              {
+                "value": "text-center",
+                "label": "Center"
+              },
+              {
+                "value": "text-right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "block_width",
+            "label": "Content width",
+            "default": "6",
+            "options": [
+              {
+                "value": "4",
+                "label": "33%"
+              },
+              {
+                "value": "6",
+                "label": "50%"
+              },
+              {
+                "value": "8",
+                "label": "66%"
+              },
+              {
+                "value": "9",
+                "label": "75%"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "horizontal_content_alignment",
+            "label": "Horizontal position",
+            "default": "center",
+            "options": [
+              {
+                "value": "left",
+                "label": "Left"
+              },
+              {
+                "value": "center",
+                "label": "Center"
+              },
+              {
+                "value": "right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "id": "vertical_content_alignment",
+            "label": "Vertical position",
+            "default": "middle",
+            "options": [
+              {
+                "value": "top",
+                "label": "Top"
+              },
+              {
+                "value": "middle",
+                "label": "Middle"
+              },
+              {
+                "value": "bottom",
+                "label": "Bottom"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Background"
+          },
+          {
+            "type": "checkbox",
+            "id": "use_background_img",
+            "label": "Show image",
+            "default": true
+          },
+          {
+            "type": "image_picker",
+            "id": "background_img",
+            "label": "Image",
+        	"info": "1900px recommended"
+          },
+          {
+            "type": "select",
+            "id": "background_alignment",
+            "label": "Image position",
+            "default": "center center",
+            "options": [
+              {
+                "label": "Top left",
+                "value": "left top"
+              },
+              {
+                "label": "Top center",
+                "value": "center top"
+              },
+              {
+                "label": "Top right",
+                "value": "right top"
+              },
+              {
+                "label": "Middle left",
+                "value": "left center"
+              },
+              {
+                "label": "Middle center",
+                "value": "center center"
+              },
+              {
+                "label": "Middle right",
+                "value": "right center"
+              },
+              {
+                "label": "Bottom left",
+                "value": "left bottom"
+              },
+              {
+                "label": "Bottom center",
+                "value": "center bottom"
+              },
+              {
+                "label": "Bottom right",
+                "value": "right bottom"
+              }
+            ]
+          }, 
+          {
+            "type": "checkbox",
+            "id": "font_color",
+            "label": "White text",
+            "default": true
+          },
+    	  {
+            "type": "color",
+            "id": "background_img_overlay",
+            "label": "Overlay"
+          },
+          {
+            "type": "range",
+            "id": "background_img_overlay_opacity",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "label": "Opacity",
+            "default": 0
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Slideshow with text",
+        "category": "Image",
+        "blocks": [
+          {
+            "type": "slide"
+          },
+          {
+            "type": "slide"
+          },
+          {
+            "type": "slide"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

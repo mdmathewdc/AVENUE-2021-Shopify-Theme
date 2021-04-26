@@ -1,0 +1,95 @@
+{%- assign current = false -%}
+{%- assign link_handle = link.url | split:'/' | last -%}
+{% if link_handle == collection.handle %}
+{%- assign current = true -%}
+{% endif %}
+
+{% if current %}
+
+{%- assign sub_linksCt = 0 -%}
+{%- for link in link.links -%}{%- if link.type == 'collection_link' or link.type == 'catalog_link' -%}{%- capture sub_links -%}{%- increment sub_linksCt -%}{%- endcapture -%}{%- endif -%}{%- endfor -%}
+{%- assign sub_links = sub_links | plus:1 -%}
+
+{% if sub_links > 1 %}
+
+{%- assign block_width_sub = sub_links | downcase -%}
+{% case block_width_sub %}
+{% when '2','3','4' %}
+{%- assign block_width_sub = 'three' -%}
+{% else %}
+{%- assign block_width_sub = 'two-half' -%}
+{% endcase %}
+
+{% if section.settings.use_slider and sub_links > 2 %}
+{%- assign slider = true -%}
+{% else %}
+{%- assign slider = false -%}
+{% endif %}
+
+{% if sub_links < 5 %}
+{%- assign total = true -%}
+{% else %}
+{%- assign total = false -%}
+{% endif %}
+
+<div class="{% if section.settings.text_over and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %}twelve {% if slider %}doublepad {% else %}bottompad-half {% endif %}{% elsif slider %}twelve bottompad-half {% else %}bottompad-half {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+  <div class="sub-collections {% if slider %}glider-contain {% endif %}tab-body">
+    <div {% if slider %}id="glider-carousel-{{ section.id }}" data-slides="2.5" {% if total %}data-limit="4" {% endif %}{% endif %}class="{% if slider %}glider {% if total %}no-drag {% endif %}{% endif %}table-center text-center clearfix">
+      <div class="product-loop{% if total %} center{% endif %}{% if slider %} glider-track{% endif %}">
+        {% for link in link.links %}
+        {% if link.type == 'collection_link' or link.type == 'catalog_link' %}
+        <div class="product {{ block_width_sub }} animate animate-loop-{{ forloop.index0 }} brands top">
+
+          {%- assign sub_collection_url = link.url | split: 'collections/' | last | split: '/' | first -%}
+          {%- assign sub_collection = collections[sub_collection_url] -%}
+          {%- assign images_enable = false -%}
+
+          {% if section.settings.use_product_image or sub_collection.image == blank %}
+          {%- assign img_src = sub_collection.products.first.featured_media.preview_image -%}
+          {%- assign images_enable = true -%}
+          {% else %}
+          {%- assign img_src = sub_collection.image -%}
+          {%- assign images_enable = true -%}
+          {% endif %}
+
+          {% if images_enable %}
+          {%- assign size = 320 -%}
+          <div class="product-thumb">
+            <a href="{{ link.url }}" title="{{ link.title | escape }}">
+              {% if section.settings.image_fit =='cover' %}
+              <span class="lazypadding">
+                {%- capture image_data -%}{%- render 'image-background-src', img_src: img_src -%}{%- endcapture -%}
+                {%- render 'image-background', bg_size: 'cover', image_data: image_data, img_src: img_src, size: size -%}
+              </span>                            
+              {% else %}
+              <span class="center" style="max-width:{{ img_src.width }}px">
+                {%- capture alt -%}{% if img_src.alt %}{{ img_src.alt }}{% else %}{{ collection.title }}{% endif %}{%- endcapture -%}
+                {%- render 'image-load', img_src: img_src, size: size, id: sub_collection.id, alt: alt -%}  
+              </span>
+              {% endif %}
+            </a>
+          </div>
+          {% endif %}
+          
+          <div class="product-details{% if images_enable == false %} toppad{% endif %}">
+            <div class="product-title collection">
+              <h5>{{ link.title | link_to: link.url, link.title }}</h5>
+            </div>
+          </div>
+          
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% if slider %}
+    <div id="glider-pagination-{{ section.id }}" class="glider-pagination {% if total %}hidden {% endif %}tab-body relative">
+      <div id="glider-button-prev-{{ section.id }}" class="glider-button-prev" role="button" aria-label="{{ 'products.general.previous' | t }}">{%- render 'icons-theme', icon: 'left', size: '16' -%}</div>
+      <div id="glider-button-next-{{ section.id }}" class="glider-button-next" role="button" aria-label="{{ 'products.general.next' | t }}">{%- render 'icons-theme', icon: 'right', size: '16' -%}</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endif %}
