@@ -72,8 +72,7 @@ var accordion = new Accordion($('#accordion'), false);
 
 .childlink {
   color: #a3a3a3;
-    font-family: 'Roboto';
-}
+  font-family: 'Merriweather Sans'}
 
 
 
@@ -168,7 +167,8 @@ ul {
 .submenu {
     display: none;
     background: #000000;
-    font-size: 14px
+    font-size: 14px;
+    padding: 0px;
 }
 
 .submenu li {
@@ -180,10 +180,11 @@ ul {
     text-decoration: none;
     color: #d9d9d9;
     padding: 12px;
-    padding-left: 27px;
+    padding-left: 43px;
     -webkit-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
-    transition: all 0.25s ease
+    transition: all 0.25s ease;
+    font-size: initial;
 }
 
 .submenu a:hover {
@@ -247,6 +248,18 @@ ul {
     
    
     }
+
+    .newsletter-font {
+      color: white;
+    }
+
+    a.childlink:hover {
+    color: #faba80;
+}
+
+.content-height-1608654855686 {
+  
+}
 
 
 </style>
@@ -526,7 +539,7 @@ ul {
           <h4 class="h5">{{ 'homepage.onboarding.no_title' | t }}</h4>
           <p>{{ 'homepage.onboarding.no_block_body' | t }}</p>
           {% else %}
-          {% if block.settings.title != blank %}<h4 class="h5">{{ block.settings.title }}</h4>{% endif %}
+          {% if block.settings.title != blank %}<h4 class="h5 newsletter-font">{{ block.settings.title }}</h4>{% endif %}
           {% if block.settings.body != blank %}{{ block.settings.body }}{% endif %}
           {% endif %}
         </div>
