@@ -1,4 +1,16 @@
-	{%- include 'wcp_discount' with product -%}
+	<style>
+
+.yotpo-bottomline.pull-left.star-clickable {
+  justify-content: center;
+  float:none;
+}
+
+h1.product-header {
+    margin-bottom: 12px;
+}
+  </style>
+  
+  {%- include 'wcp_discount' with product -%}
 	{%- assign current_variant = product.selected_or_first_available_variant -%}
     {% include 'wcp_variant' with current_variant %}
 	{% include 'wcp_vd_table_change' with product %}
@@ -72,7 +84,28 @@
                       {% if section.settings.include_breadcrumbs %}
                       {%- render 'product-breadcrumbs' -%}
                       {% endif %} 
-                      <h1 class="product-header">{{ product.title }}</h1>
+
+                      <div>  
+                        <h1 class="product-header">{{ product.title }}</h1>
+
+                        <div class="yotpo bottomLine"
+                      data-appkey="vM7kxpMxG05YPJYRQn8UBdYal26CL5G1NEqJoyqP"
+                      data-domain="{{shop.permanent_domain | escape }}"
+                      data-product-id="{{ product.id }}"
+                      data-product-models="{{ product.id }}"
+                      data-name="{{ product.title | escape }}"
+                      data-url="{{ shop.url }}{{ product.url }}"
+                      data-image-url="{{ product.featured_image | product_img_url: 'large' |replace: '?', '%3F' | replace: '&','%26'}}"
+                      data-description="{{ product.description | escape }}"
+                      data-bread-crumbs="{% for tag in product.tags %}{{ tag | escape }};{% endfor %}">
+                  </div>
+
+
+                      </div>
+
+                      
+
+                      
                       {%- render 'product-form-details' -%}
                       {% if section.settings.include_social %}{%- render 'social-share', share_title: product.title, share_permalink: product.url, share_image: product.featured_media -%}{% endif %}
                     </div>
