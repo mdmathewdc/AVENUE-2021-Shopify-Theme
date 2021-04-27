@@ -1,3 +1,256 @@
+<head>
+  <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+  <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+  <link href='https://use.fontawesome.com/releases/v5.7.2/css/all.css'>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+$(function() {
+var Accordion = function(el, multiple) {
+this.el = el || {};
+this.multiple = multiple || false;
+
+var links = this.el.find('.link');
+
+links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+}
+
+Accordion.prototype.dropdown = function(e) {
+var $el = e.data.el;
+$this = $(this),
+$next = $this.next();
+
+$next.slideToggle();
+$this.parent().toggleClass('open');
+
+if (!e.data.multiple) {
+$el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+};
+}
+
+var accordion = new Accordion($('#accordion'), false);
+});
+
+</script>
+
+
+<style>
+
+.options.locale-width {
+    width:{{ locale_size | times: 6.5 | plus:44 | round }}px;
+  }
+
+  .site-footer__hr {
+    border-bottom: 1px solid {{ section.settings.color_footer_bg | color_darken: 10 }};
+  }
+
+  .parentLink {
+  
+    color: white !important;
+    font-weight: 1000;
+    font-variant-caps: all-small-caps;
+    font-size: x-large;
+  }
+
+  .parentList {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .parent {
+  display: flex;
+  justify-content: space-between;
+}
+
+.menuitems {
+  /* padding: 0px 89px 0px 82px; */
+  text-align: justify;
+}
+
+.childlink {
+  color: #a3a3a3;
+    font-family: 'Roboto';
+}
+
+
+
+
+
+ul {
+    list-style-type: none
+}
+
+
+/* Accordion style sheet START */
+
+
+@media screen and (max-width: 750px) {
+    .footerDesktopContainer {
+      display: none;
+    } 
+    
+   
+    }
+
+    @media screen and (min-width: 750px) {
+    .accordion {
+      display: none;
+    } 
+    
+   
+    }
+
+
+.accordion {
+    width: 100%;
+    /* max-width: 384px; */
+    margin: 0px auto 20px;
+    background: rgb(0, 0, 0);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 0px;
+    padding-left: 0px;
+}
+
+.accordion .link {
+    cursor: pointer;
+    display: block;
+    padding: 15px 15px 15px 42px;
+    color: #4D4D4D;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #CCC;
+    position: relative;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease
+}
+
+.accordion li:last-child .link {
+    border-bottom: 0
+}
+
+.accordion li i {
+    position: absolute;
+    top: 16px;
+    left: 12px;
+    font-size: 18px;
+    color: #595959;
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease
+}
+
+.accordion li i.fa-chevron-down {
+    right: 12px;
+    left: auto;
+    font-size: 16px
+}
+
+.accordion li.open .link {
+    color: #AA00FF
+}
+
+.accordion li.open i {
+    color: #AA00FF
+}
+
+.accordion li.open i.fa-chevron-down {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg)
+}
+
+.submenu {
+    display: none;
+    background: #000000;
+    font-size: 14px
+}
+
+.submenu li {
+    border-bottom: 1px solid #4b4a5e
+}
+
+.submenu a {
+    display: block;
+    text-decoration: none;
+    color: #d9d9d9;
+    padding: 12px;
+    padding-left: 27px;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease
+}
+
+.submenu a:hover {
+    background: #e2874a;
+    color: #FFF
+}
+  
+  .parentMobileList {
+    color: white;
+  }
+
+  .footerDesktopContainer {
+    /* border: 1px solid red; */
+    width: 100%;
+    padding-top: 25px;
+  }
+
+  .page-width-footer {
+  padding-left: 55px;
+  padding-right: 55px; }
+  @media only screen and (max-width: 749px) {
+    .page-width-footer {
+      padding-left: 0px;
+      padding-right: 0px;
+      } }
+
+      .icon2 {
+    display: inline-block;
+    width: 13px;
+    height: 20px;
+    vertical-align: middle;
+    fill: red;
+    float: right;
+    /* margin-left: 274px; */
+    margin-top: 8px;
+    margin-right:6px;
+
+    transform: rotate(0deg);
+    transition: 400ms ease-in-out;
+  }
+
+/* Avenue style edits*/
+
+.black-footer, .sub-footer {
+  background-color: black !important;
+}
+
+.child {
+  padding-left: 0;
+}
+
+
+</style>
+  
+</head>
+
+
+
+
+
+
+
+
+
+
+
+
 {%- assign blocks = false -%}
 {% if section.settings.use_block_img %}
 {%- assign blocks = true -%}
@@ -23,7 +276,7 @@
 <footer data-section-id="{{ section.id }}" 
         data-section-type="footer_section"
         data-multi="{% if enabled_currencies or published_locales and locale_name != blank %}true{% else %}false{% endif %}"
-        class="clearfix">
+        class="clearfix black-footer">
   {% if blocks %}
   <div class="container clearfix{% if section.settings.horizontal_content_alignment %} table-center{% endif %}">
     <div{% if section.settings.horizontal_content_alignment %} class="center"{% endif %}>
@@ -193,7 +446,67 @@
       {% else %}
       {%- assign section_onboarding = false -%}
       {% endif %}
-      <div class="{{ block_width }} top {{ block.settings.text_alignment }} bottompad-half" {{ block.shopify_attributes }}> 
+      <div class="top {{ block.settings.text_alignment }} bottompad-half" {{ block.shopify_attributes }}> 
+
+        
+
+          <!-- Mobile View Code START -->
+        
+          <ul id="accordion" class="accordion">
+            {% for link in linklists.refresh-footer-menu.links %}
+
+              <li class = "parentMobileList">
+                  <div class="link"><i class="fa fa-laptop"></i> <a class = "parentLink" href="#">{{ link.title }}  </a> <svg aria-hidden="true" focusable="false" role="presentation" class="icon2 icon-chevron-down" viewBox="0 0 9 9"><path d="M8.542 2.558a.625.625 0 0 1 0 .884l-3.6 3.6a.626.626 0 0 1-.884 0l-3.6-3.6a.625.625 0 1 1 .884-.884L4.5 5.716l3.158-3.158a.625.625 0 0 1 .884 0z"></path></svg> </div>
+                  {% if link.links != blank %}
+                  <ul class="submenu">
+                    {% for child_link in link.links %}  
+
+                   <li> <a class = "childlink" href= "{{ child_link.url }}">{{ child_link.title }}</a> </li>
+                   {% endfor %}
+
+                  </ul>
+              </li>
+            {% endif %}
+              
+              {% endfor %}
+          </ul>
+    
+        <!-- Mobile View Code END -->
+
+
+
+
+                <!-- Desktop View Code START -->
+            <div class = "footerDesktopContainer">
+                <ul class="parent">
+                  {% for link in linklists.refresh-footer-menu.links %}
+                  <div class = "menuitems">
+                  <li class = "parentList"><a class = "parentLink" href="#">{{ link.title }}</a>
+                  {% if link.links != blank %}
+                    <ul class="child">
+                      {% for child_link in link.links %}  
+                      <li><a class = "childlink" href= "{{ child_link.url }}">{{ child_link.title }}</a>
+                      {% if child_link.links != blank %}
+                        <ul class="grandchild">
+                        {% for grandchild_link in child_link.links %}  
+                          <li><a href= "{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
+                        {% endfor %}
+                        </ul>
+                      {% endif %}   
+                      </li>
+                      {% endfor %}
+                    </ul> 
+                  {% endif %} 
+                  </li>
+                </div>
+                  <br>
+                  {% endfor %}
+                  </ul>
+            </div>
+        <!-- Desktop View Code END -->
+
+
+
         {% if section_onboarding or block.settings.title != blank or block.settings.body != blank %}         
         <div class="inline-container">
           {% if section_onboarding %}
@@ -285,9 +598,7 @@
 
 {% if shop.published_locales.size > 1 and section.settings.enable_locales %}
 <style>
-  .options.locale-width {
-    width:{{ locale_size | times: 6.5 | plus:44 | round }}px;
-  }
+ 
 </style>
 {% endif %}  
 
