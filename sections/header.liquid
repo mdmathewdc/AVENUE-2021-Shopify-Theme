@@ -1,3 +1,9 @@
+<style>
+  .main-menu.table-cell {
+    padding-left: 371px;
+}
+
+</style>
 {% assign published_locales = false %}
 {% assign enabled_currencies = false %}
 {% if shop.published_locales.size > 1 and section.settings.enable_locales %}
@@ -273,7 +279,7 @@
                         {% endfor %}
 
                         <li class="parent-level{% if link.links != blank %} parent has-dropdown{% unless sub_links and sub_sub_links %} relative{% endunless %} plus-{{ section.settings.menu_alignment }}{% endif %}{% if forloop.first %} first{% elsif forloop.last %} last{% endif %}" role="menuitem"{% if link.links != blank %} aria-haspopup="true"{% endif %}>
-                          <a href="{{ link.url }}" class="parent{% if link.active %} active{% endif %}"{% if link.active %} aria-current="page"{% endif %} title="{{ link.title | escape }}" tabindex="0"><span>{{ link.title }}</span></a>
+                          <a href="{{ link.url }}" class="parent{% if link.active %} active{% endif %}"{% if link.active %} aria-current="page"{% endif %} title="{{ link.title | escape }}" tabindex="0"> {% if link.title == 'REMOVETHIS' %} <span style = "visibility:hidden"> {{ link.title }} {% else %} <span> {{link.title}} {% endif %} </span></a>
 
                           {%- assign has_image = false -%}
                           {%- assign link_collection = false -%}
