@@ -20,6 +20,18 @@
     {%- render 'javascript' -%}
     {{ content_for_header }}
   {% render 'minmaxify-head' %}
+
+  <style>
+
+span.vendors {
+    display: none;    /* Hide Vendor name */
+}
+
+.locale-selectors__container {
+    display: none;    /* Hide the currency selector at bottom */
+}
+
+  </style>
 </head>
   <body data-section-type="main-body"{% if rtl %} class="rtl"{% endif %}>    
     <div id="ajaxBusy" style="background:#fff;content:'';height:100%;margin:0px;padding:0px;position:fixed;right:0;top:0;width:100%;z-index: 999999;"><div class="loader"></div></div>
@@ -30,6 +42,22 @@
     <main id="content" class="content {% if request.page_type != blank %}{{ request.page_type | split: '/' | first | replace: '404', 'error' }}{% else %}default{% endif %}-page{% if template.suffix != blank %} {{ template.suffix }}{% endif %}{% if template == 'gift_card' %} wrap{% endif %}" role="main">      
       {{ content_for_layout }}
     </main>
+
+    <div class="yotpo yotpo-reviews-carousel" 
+ data-header-customisation-enabled="1" 
+ data-header-customisation-color="#000000" 
+ data-header-customisation-font-size="18" 
+ data-header-customisation-text="" 
+ data-header-customisation-alignment="left" 
+ data-background-color="transparent" 
+ data-mode="top_rated" 
+ data-type="site" 
+ data-count="9" 
+ data-show-bottomline="1" 
+ data-autoplay-enabled="1" 
+ data-autoplay-speed="3000" 
+ data-show-navigation="1">&nbsp;</div>
+    
     {% section 'footer-brands' %}
     {% section 'footer' %}
     <!-- WPD Start -->
