@@ -52,7 +52,8 @@ var accordion = new Accordion($('#accordion'), false);
     color: white !important;
     font-weight: 1000;
     font-variant-caps: all-small-caps;
-    font-size: x-large;
+    font-size: xx-large;
+    padding-bottom: 10px;
   }
 
   .parentList {
@@ -72,7 +73,9 @@ var accordion = new Accordion($('#accordion'), false);
 
 .childlink {
   color: #a3a3a3;
-  font-family: 'Merriweather Sans'}
+  font-family: 'Merriweather Sans';
+  font-size: large;
+  }
 
 
 
@@ -302,7 +305,7 @@ ul {
 <footer data-section-id="{{ section.id }}" 
         data-section-type="footer_section"
         data-multi="{% if enabled_currencies or published_locales and locale_name != blank %}true{% else %}false{% endif %}"
-        class="clearfix black-footer">
+        class="clearfix black-footer" id="footer-id">
   {% if blocks %}
   <div class="container clearfix{% if section.settings.horizontal_content_alignment %} table-center{% endif %}">
     <div{% if section.settings.horizontal_content_alignment %} class="center"{% endif %}>
@@ -482,7 +485,7 @@ ul {
             {% for link in linklists.refresh-footer-menu.links %}
 
               <li class = "parentMobileList">
-                  <div class="link"><i class="fa fa-laptop"></i> <a class = "parentLink" href="#">{{ link.title }}  </a> <svg aria-hidden="true" focusable="false" role="presentation" class="icon2 icon-chevron-down" viewBox="0 0 9 9"><path d="M8.542 2.558a.625.625 0 0 1 0 .884l-3.6 3.6a.626.626 0 0 1-.884 0l-3.6-3.6a.625.625 0 1 1 .884-.884L4.5 5.716l3.158-3.158a.625.625 0 0 1 .884 0z"></path></svg> </div>
+                  <div class="link"><i class="fa fa-laptop"></i> <a class = "parentLink" href="#footer-id">{{ link.title }}  </a> <svg aria-hidden="true" focusable="false" role="presentation" class="icon2 icon-chevron-down" viewBox="0 0 9 9"><path d="M8.542 2.558a.625.625 0 0 1 0 .884l-3.6 3.6a.626.626 0 0 1-.884 0l-3.6-3.6a.625.625 0 1 1 .884-.884L4.5 5.716l3.158-3.158a.625.625 0 0 1 .884 0z"></path></svg> </div>
                   {% if link.links != blank %}
                   <ul class="submenu">
                     {% for child_link in link.links %}  
@@ -507,7 +510,7 @@ ul {
                 <ul class="parent">
                   {% for link in linklists.refresh-footer-menu.links %}
                   <div class = "menuitems">
-                  <li class = "parentList"><a class = "parentLink" href="#">{{ link.title }}</a>
+                  <li class = "parentList"><a class = "parentLink" href="#footer-id">{{ link.title }}</a>
                   {% if link.links != blank %}
                     <ul class="child">
                       {% for child_link in link.links %}  

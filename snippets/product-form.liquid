@@ -169,7 +169,7 @@
     </select>
     
     {% if section.settings.qty_enable or template == 'product.quick' and settings.qty_enable_quick %}
-    <div class="{{ block_width }}">
+    <div class="three">
       <span class="quantity form">
         <button type="button" class="icon icon-minus btn qtybtn ignore qtyminus_{{ section.id }} text-center {{ template }}-template" field="updates_{{ section.id }}" aria-label="{{ 'products.general.minus' | t }}"></button>
         <input name="quantity" type="number" inputmode="numeric" pattern="[0-9]*" value="{% unless variant.available %}0{% else %}1{% endunless %}" min="{% unless product.available %}0{% else %}1{% endunless %}" class="ignore quantity item-qty text-center" field="error_{{ section.id }}" id="updates_{{ section.id }}"{% if variant.inventory_management and variant.inventory_policy != 'continue' %} max="{{ variant.inventory_quantity }}"{% endif %} />                   

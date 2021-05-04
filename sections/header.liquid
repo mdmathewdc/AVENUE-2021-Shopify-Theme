@@ -1,6 +1,6 @@
 <style>
   .main-menu.table-cell {
-    padding-left: 65px;
+    padding-left: 0px;
 }
 
 </style>
@@ -279,7 +279,7 @@
                         {% endfor %}
 
                         <li class="parent-level{% if link.links != blank %} parent has-dropdown{% unless sub_links and sub_sub_links %} relative{% endunless %} plus-{{ section.settings.menu_alignment }}{% endif %}{% if forloop.first %} first{% elsif forloop.last %} last{% endif %}" role="menuitem"{% if link.links != blank %} aria-haspopup="true"{% endif %}>
-                          <a href="{{ link.url }}" class="parent{% if link.active %} active{% endif %}"{% if link.active %} aria-current="page"{% endif %} title="{{ link.title | escape }}" tabindex="0"> {% if link.title == 'REMOVETHIS' %} <span style = "visibility:hidden"> {{ link.title }} {% else %} <span> {{link.title}} {% endif %} </span></a>
+                          <a href="{{ link.url }}" class="parent{% if link.active %} active{% endif %}"{% if link.active %} aria-current="page"{% endif %} title="{{ link.title | escape }}" tabindex="0"> {% if link.title == 'REMOVE' %} <span style = "visibility:hidden"> {{ link.title }} {% else %} <span> {{link.title}} <svg class="arrow-down" height="10" width="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs"><g><path d="M 7 20 L 14 12 C 14 12 14 12 14 12 L 7 4" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="8px"></path><path d="M 7 20 L 14 12 C 14 12 14 12 14 12 L 7 4" fill="none" stroke="#bd3512" stroke-linecap="round" stroke-linejoin="round" stroke-width="4px"></path></g></svg>{% endif %} </span></a>
 
                           {%- assign has_image = false -%}
                           {%- assign link_collection = false -%}
@@ -438,6 +438,8 @@
     {% endif %}
   }
   
+  svg.arrow-down {
+    transform: rotate(90deg);
 </style>
 
 {% schema %}
