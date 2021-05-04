@@ -610,7 +610,7 @@ ul {
         
         <p>{{ shop.name | link_to: '/' }} &copy; {{ 'now' | date: '%Y' }}</p>
         {% if section.settings.body %}<span class="small">{{ section.settings.body }}</span>{% endif %}
-        <p>{{ powered_by_link | replace: 'nofollow','nofollow noopener noreferrer' }}</p>
+     
         {% if section.settings.display_payments %}
         {% unless shop.enabled_payment_types == empty %}
         <ul class="inline-list payment-icons unformatted">
