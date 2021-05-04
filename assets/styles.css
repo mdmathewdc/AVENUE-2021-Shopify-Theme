@@ -6987,6 +6987,7 @@ label.error:after {
 input[type="text"].search-field {
 	font-weight: var(--body_font_weight_bold);
 	padding: calc(var(--master_spacing) / 2);
+	font-size: x-large;
 }
 
 input[type="text"].search-field::-webkit-input-placeholder {
